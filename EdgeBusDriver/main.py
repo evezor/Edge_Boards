@@ -1,7 +1,7 @@
 from machine import Pin
 import utime
 from pyb import CAN
-import sys
+
 
 #Evezor edge Bus driver basic implementation of Oshbus
 
@@ -24,6 +24,7 @@ can.setfilter(0, CAN.MASK16, 0, (0, 1920, 0, 2047)) #Receive all EMCY messages a
 can.setfilter(1, CAN.MASK16, 0, (128, 1920, 256, 1920)) #EXP TX and RX
 
 #FIFO 1
+
 can.setfilter(2, CAN.MASK16, 1, (384, 1920, 512, 1920))  #CMD TX and RX
 can.setfilter(3, CAN.MASK16, 1, (640, 1920, 768, 1920))  #EVENT TX and RX
 can.setfilter(4, CAN.MASK16, 1, (896, 1920, 1024, 1920))  #GPC1 and GPC2
@@ -31,6 +32,14 @@ can.setfilter(5, CAN.MASK16, 1, (1152, 1920, 1280, 1920))  #GPC3 and GPC4
 can.setfilter(6, CAN.MASK16, 1, (1408, 1920, 1536, 1920))  #GPC5 and GPC6
 can.setfilter(7, CAN.MASK16, 1, (1664, 1920, 1792, 1920))  #GPC7 and HBT
 can.setfilter(8, CAN.MASK16, 1, (1920, 1920, 2047, 2047))  #Debug and [none]
+
+#list filter list for Node devices
+# can.setfilter(1, CANLIST16, 1, (384+thisID, 255, 383, 511)) #This CMD channel and Public Access List
+# can.setfilter(2, CANLIST16, 1, (639, 767, 895, 1023))       #Public Access List cont'd
+# can.setfilter(3, CANLIST16, 1, (1151, 1279, 1407, 1535))    #Public Access List cont'd
+# can.setfilter(2, CANLIST16, 1, (1663, 1791, 1919, 2046))    #Public Access List cont'd
+
+
 
 channelName = ["EMCY", "EXP TX", "EXP RX", "CMD TX", "CMD RX", "EVENT TX", "EVENT RX", "GPC1", "GPC2", "GPC3", "GPC4", "GPC5", "GPC6", "GPC7", "HBT", "DEBUG"]
 

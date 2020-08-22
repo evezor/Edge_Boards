@@ -14,7 +14,9 @@ def spew(ocan):
 
     while True:
         for i in range(536870911):
-            ocan._send(i, 'message!')
+            channel = i % 2 ** bits.bundle["channel"]
+            cid = i % 2 ** bits.bundle["cid"]
+            ocan.send(channel, cid, i, 'message!')
 
 
 def main():

@@ -14,7 +14,8 @@ import bits
 class OCan():
 
     def __init__(self, bus=1):
-        self.can = CAN(bus, mode=CAN.NORMAL, extframe=True)
+        self.can = CAN(bus, mode=CAN.NORMAL, extframe=True,
+                prescaler=12, bs1=11, bs2=2)
 
     def _send(self, msg_id, message):
         # id is the id of the message to be sent.

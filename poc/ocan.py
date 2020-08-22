@@ -8,7 +8,9 @@ from pyb import CAN
 
 import bits
 
-Class OCan():
+import time
+
+class OCan():
 
     def __init__(self, bus=1):
         self.can = CAN(bus, mode=CAN.NORMAL, extframe=True)
@@ -31,13 +33,16 @@ Class OCan():
 
         self.can.send(message, msg_id)
 
-    def send(self, can_id, message):
-
-    def _set_filter(self, bank, mode, fifo, params, *, rtr):
-        self.can.setfilter(bank, mode, fifo, params, rtr=rtr)
+    def send(self, msg_id, message):
+        self._send(msg_id, message)
 
 
-    def recieve(self):
+    def _setfilter(self, fifo, params):
+        # always 1, MASK32 I hope.
+        self.can.setfilter(1, CAN.MASK32, fifo, params)
+
+
+    def _recieve(self):
         # TODO: maybe we don't want the "wait forever" feature here.
 
         r = None
@@ -49,4 +54,3 @@ Class OCan():
 
         return r
 
-        self.can.setfilter(0, CAN.MASK32, 0, (0,0) )

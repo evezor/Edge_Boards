@@ -4,16 +4,17 @@
 # parameter names of wrappers come from:
 # https://docs.micropython.org/en/latest/library/pyb.CAN.html#pyb.CAN.info
 
+import time
+from collections import namedtuple
+
 from pyb import CAN
 
 import bits
 
-import time
-
 class OCan():
 
     def __init__(self, bus=1):
-        self.can = CAN(bus, mode=CAN.NORMAL, extframe=True, prescaler=12, bs1=11, bs2=2)
+        self.can = CAN(bus, mode=CAN.NORMAL, extframe=True)
 
     def _send(self, msg_id, message):
         # id is the id of the message to be sent.
@@ -33,8 +34,10 @@ class OCan():
 
         self.can.send(message, msg_id)
 
-    def send(self, msg_id, message):
-        self._send(msg_id, message)
+    def send(self, channel, p2, p3, message):
+        msg_id = bits.pack(channel=channel, cid=p2, bonus=p3)
+        ret = self._send(msg_id, message)
+        return ret
 
 
     def _setfilter(self, fifo, params):
@@ -53,4 +56,19 @@ class OCan():
                 continue
 
         return r
+
+    def recieve(self):
+        BeerCan = namedtuple('BeerCan', [
+            "channel", "cid", "bonus",
+            "rtr", "fmi", "data",
+            ])
+
+        can_id, rtr, fmi, data = self._recieve()
+        r2 = bits.unpack(can_id)
+        beercan = BeerCan(
+                r2['channel'], r2['cid'], r2['bonus'],
+                rtr, fmi, data, )
+
+        return beercan
+
 

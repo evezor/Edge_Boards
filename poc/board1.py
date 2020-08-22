@@ -4,40 +4,22 @@
 import random
 import time
 
-from pyb import CAN
+from ocan import OCan
 
 import bits
 
-def init():
-    can = CAN(1, mode=CAN.NORMAL, extframe=True)
-    return can
-
-def send(can, can_id, message):
-    # only send if there is a free buffer
-    # block/hang/sleep until there is (bad?)
-
-    pending_tx = True
-    while pending_tx:
-
-        tec, rec, e_warns, e_passives, e_offs, pending_tx, pending_rx0, pending_rx1 = can.info()
-
-        # number of pending TX messages
-        time.sleep_ms(pending_tx)
-
-    can.send(message, can_id)
-
-def spew(can):
+def spew(ocan):
     # all the numbers as fast as we can
     # send() will trottle it to keep the local buffer from overflowing.
 
     while True:
         for i in range(536870911):
-            send(can, i, 'message!')
+            ocan._send(i, 'message!')
 
 
 def main():
-    can = init()
-    spew(can)
+    ocan = OCan()
+    spew(ocan)
 
 if __name__=='__main__':
     main()

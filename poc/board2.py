@@ -3,14 +3,10 @@
 
 import time
 
-from pyb import CAN
+from ocan import OCan
 
 import bits
 
-
-def init():
-    can = CAN(1, mode=CAN.NORMAL, extframe=True)
-    return can
 
 def set_filter(can):
     can.setfilter(0, CAN.MASK32, 0, (0,0) )
@@ -19,24 +15,15 @@ def set_filter(can):
     # can.setfilter(3, CAN.MASK32, 0, ( 0b11111111111111111111111111111,
     #    0b11111111111111111111111111111) )
 
-def recieve(can):
 
-    r = None
-    while r is None:
-        try:
-            r = can.recv(0)
-        except OSError: # [Errno 110] ETIMEDOUT
-            continue
-
-    return r
-
-def drink(can):
+def drink(ocan):
     print("waiting...")
 
     last_id = None
     while True:
 
-        can_id, rtr, fmi, data = recieve(can)
+        can_id, rtr, fmi, data = ocan._recieve()
+
         print(can_id, end=' ')
 
         if last_id is not None:
@@ -48,11 +35,11 @@ def drink(can):
         last_tick = time.ticks_ms()
 
 
-
 def main():
-    can = init()
-    set_filter(can)
-    drink(can)
+    ocan = OCan()
+    ocan._setfilter(0, (0,0) )
+    drink(ocan)
+
 
 if __name__=='__main__':
     main()

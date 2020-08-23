@@ -15,7 +15,7 @@ def drink(ocan):
         print(beer.channel, beer.cid, beer.bonus, end=' ')
 
         if last_num is not None:
-            assert beer.bonus == last_num + 1
+            assert beer.bonus == last_num + 1, "sequance broken by {}".format(beer.bonus - last_num)
             ticks = time.ticks_ms() - last_tick
             print("*"*ticks)
 

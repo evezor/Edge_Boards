@@ -9,7 +9,7 @@ bundle["cid"] = 7
 bundle["bonus"] = 18
 
 bundle_size = sum(bundle.values())
-assert bundle_size == 29
+assert bundle_size == 29, "bundle_size don't add up to 21"
 
 
 def pack(**kwargs):
@@ -18,7 +18,7 @@ def pack(**kwargs):
 
     for k in bundle:
 
-        assert 0 <= kwargs[k] < 2 ** bundle[k]
+        assert 0 <= kwargs[k] < 2 ** bundle[k], "{} overfow {} bits: {}".format(k, bundle[k], kwargs)
 
         # move the previous bits out of the way:
         b = b << bundle[k]

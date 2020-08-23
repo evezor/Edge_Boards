@@ -11,6 +11,25 @@ from pyb import CAN
 
 import bits
 
+channels = [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "NWK",
+        "",
+        "",
+        "DEBUG",
+        ]
+
+
 class OCan():
 
     def __init__(self, bus=1):
@@ -35,8 +54,9 @@ class OCan():
 
         self.can.send(message, msg_id)
 
-    def send(self, channel, p2, p3, message):
-        msg_id = bits.pack(channel=channel, cid=p2, bonus=p3)
+    def send(self, channel_name, p2, p3, message):
+        channel_num = channels.index(channel_name)
+        msg_id = bits.pack(channel=channel_num, cid=p2, bonus=p3)
         ret = self._send(msg_id, message)
         return ret
 
@@ -66,8 +86,8 @@ class OCan():
 
         can_id, rtr, fmi, data = self._recieve()
         r2 = bits.unpack(can_id)
-        beercan = BeerCan(
-                r2['channel'], r2['cid'], r2['bonus'],
+        channel_name = channels[ r2['channel'] ]
+        beercan = BeerCan( channel_name, r2['cid'], r2['bonus'],
                 rtr, fmi, data, )
 
         return beercan

@@ -55,6 +55,7 @@ class OCan():
         self.can.send(message, msg_id)
 
     def send(self, channel_name, p2, p3, message):
+        print("tx: ",channel_name, p2, p3, message)
         channel_num = channels.index(channel_name)
         msg_id = bits.pack(channel=channel_num, cid=p2, bonus=p3)
         ret = self._send(msg_id, message)
@@ -90,6 +91,7 @@ class OCan():
         beercan = BeerCan( channel_name, r2['cid'], r2['bonus'],
                 rtr, fmi, data, )
 
+        print("rx: ",beercan)
         return beercan
 
 

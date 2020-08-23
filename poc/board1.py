@@ -9,9 +9,23 @@ from ocan import OCan
 import bits
 
 def zorg(ocan):
-    ocan.send(channel, cid, i, 'message!')
+    print("zorging...")
+
+    macs = ['zorg',]
+
+    ocan.send("NWK", 0, 0, 'iam zorg')
+    ocan._setfilter(0, (0,0) )
     while True:
-        pass
+        beer = ocan.recieve()
+        if beer.cid==0 and beer.bonus==0:
+            ocan.send("NWK", 0, 0, 'iam zorg')
+        if beer.cid==0 and beer.bonus==1:
+            mac = beer.data
+            if mac not in macs:
+                macs.append(mac)
+            can_id = macs.index(mac)
+            hacky_1 = 1
+            ocan.send("NWK", can_id, hacky_1, mac)
 
 def spew(ocan):
     # all the numbers as fast as we can
@@ -28,7 +42,8 @@ def spew(ocan):
 
 def main():
     ocan = OCan()
-    spew(ocan)
+    # spew(ocan)
+    zorg(ocan)
 
 if __name__=='__main__':
     main()

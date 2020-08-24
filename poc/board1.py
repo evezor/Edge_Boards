@@ -4,6 +4,8 @@
 import random
 import time
 
+from collections import OrderedDict
+
 from ocan import OCan
 
 import bits
@@ -11,19 +13,26 @@ import bits
 def zorg(ocan):
     print("zorging...")
 
-    macs = ['zorg',]
+    macs = OrderedDict()
+    macs['zorg'] = {'cid': 0}
 
+    print("zorg wakes up")
     ocan.send("NWK", 0, 0, 'iam zorg')
+
     ocan._setfilter(0, (0,0) )
     while True:
         beer = ocan.recieve()
+
         if beer.cid==0 and beer.bonus==0:
+            # if Edge wakes up, tell it Zorg is here
             ocan.send("NWK", 0, 0, 'iam zorg')
-        if beer.cid==0 and beer.bonus==1:
+
+        elif beer.cid==0 and beer.bonus==1:
+            # Edge asks for cid
             mac = beer.data
             if mac not in macs:
-                macs.append(mac)
-            can_id = macs.index(mac)
+                macs[mac] = {}
+            can_id = list(macs.keys()).index(mac)
             hacky_1 = 1
             ocan.send("NWK", can_id, hacky_1, mac)
 

@@ -4,16 +4,37 @@
 # parameter names of wrappers come from:
 # https://docs.micropython.org/en/latest/library/pyb.CAN.html#pyb.CAN.info
 
+import time
+from collections import namedtuple
+
 from pyb import CAN
 
 import bits
 
-import time
+channels = [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "NWK",
+        "",
+        "",
+        "DEBUG",
+        ]
+
 
 class OCan():
 
     def __init__(self, bus=1):
-        self.can = CAN(bus, mode=CAN.NORMAL, extframe=True)
+        self.can = CAN(bus, mode=CAN.NORMAL, extframe=True,
+                prescaler=12, bs1=11, bs2=2)
 
     def _send(self, msg_id, message):
         # id is the id of the message to be sent.
@@ -33,8 +54,12 @@ class OCan():
 
         self.can.send(message, msg_id)
 
-    def send(self, msg_id, message):
-        self._send(msg_id, message)
+    def send(self, channel_name, p2, p3, message):
+        print("tx: ",channel_name, p2, p3, message)
+        channel_num = channels.index(channel_name)
+        msg_id = bits.pack(channel=channel_num, cid=p2, bonus=p3)
+        ret = self._send(msg_id, message)
+        return ret
 
 
     def _setfilter(self, fifo, params):
@@ -54,3 +79,17 @@ class OCan():
 
         return r
 
+    def recieve(self):
+        BeerCan = namedtuple('BeerCan', [
+            "channel", "cid", "bonus",
+            "rtr", "fmi", "data",
+            ])
+
+        can_id, rtr, fmi, data = self._recieve()
+        r2 = bits.unpack(can_id)
+        channel_name = channels[ r2['channel'] ]
+        beercan = BeerCan( channel_name, r2['cid'], r2['bonus'],
+                rtr, fmi, data, )
+
+        print("rx: ",beercan)
+        return beercan

@@ -12,8 +12,8 @@ from pyb import CAN
 import bits
 
 channels = [
-        "",
-        "",
+        "EMCY",
+        "FAULT",
         "",
         "",
         "",

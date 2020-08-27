@@ -13,7 +13,7 @@ import bits
 
 channels = [
         "EMCY",
-        "",
+        "FAULT",
         "",
         "",
         "",

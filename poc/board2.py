@@ -21,7 +21,9 @@ def boot(ocan):
 
     # wait for Zorg to wake up
     ocan._setfilter(0, (0,0) )
-    beer = ocan.recieve()
+    beer = None
+    while beer is None:
+        beer = ocan.recieve(0, timeout=5000)
     # zorg: who are you?
     print("state 2")
 
@@ -32,7 +34,10 @@ def boot(ocan):
     ocan._setfilter(0, (0,0) )
     can_id = None
     while can_id is None:
-        beer = ocan.recieve()
+        beer = ocan.recieve(0,timeout=1000)
+        if beer is None:
+            continue
+
         print("state 3")
         hacky_1 = 1
         if beer.bonus == hacky_1 and beer.data == mac:

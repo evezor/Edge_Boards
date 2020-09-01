@@ -19,11 +19,14 @@ def zorg(ocan):
     print("zorg wakes up")
     ocan.send("NWK", 0, 0, 'iam zorg')
 
-    ocan._setfilter(0, (0,0) )
+    ocan._setfilter(fifo=0, params=(0,0) )
     while True:
-        beer = ocan.recieve()
+        beer = ocan.recieve(fifo=0, timeout=5000)
 
-        if beer.cid==0 and beer.bonus==0:
+        if beer is None:
+            continue
+
+        elif beer.cid==0 and beer.bonus==0:
             # if Edge wakes up, tell it Zorg is here
             ocan.send("NWK", 0, 0, 'iam zorg')
 

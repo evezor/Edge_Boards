@@ -67,29 +67,30 @@ class OCan():
         self.can.setfilter(1, CAN.MASK32, fifo, params)
 
 
-    def _recieve(self):
-        # TODO: maybe we don't want the "wait forever" feature here.
+    def _recieve(self, fifo, timeout):
 
-        r = None
-        while r is None:
-            try:
-                r = self.can.recv(0)
-            except OSError: # [Errno 110] ETIMEDOUT
-                continue
+        try:
+            r = self.can.recv(fifo, timeout=timeout)
+        except OSError: # [Errno 110] ETIMEDOUT
+            r = None
 
         return r
 
-    def recieve(self):
+    def recieve(self, fifo, timeout=0):
         BeerCan = namedtuple('BeerCan', [
             "channel", "cid", "bonus",
             "rtr", "fmi", "data",
             ])
 
-        can_id, rtr, fmi, data = self._recieve()
-        r2 = bits.unpack(can_id)
-        channel_name = channels[ r2['channel'] ]
-        beercan = BeerCan( channel_name, r2['cid'], r2['bonus'],
-                rtr, fmi, data, )
+        ret = self._recieve(fifo, timeout)
+        if ret is None:
+            beercan = None
+        else:
+            can_id, rtr, fmi, data = ret
+            r2 = bits.unpack(can_id)
+            channel_name = channels[ r2['channel'] ]
+            beercan = BeerCan( channel_name, r2['cid'], r2['bonus'],
+                    rtr, fmi, data, )
 
         print("rx: ",beercan)
         return beercan

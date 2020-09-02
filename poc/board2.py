@@ -9,12 +9,14 @@ from ocan import OCan
 
 def init_board(manifest):
     if "driver" in manifest:
-        d = __import__(manifest['driver'])
-        print(d)
+        module = __import__(manifest['driver'])
+        print(module)
+        driver = getattr( module, manifest['driver'] )()
+        print(driver)
         if "init" in manifest:
-            i = getattr(d,manifest['init'])
-            print(i)
-            i()
+            init = getattr(driver,manifest['init'])
+            print(init)
+            init()
 
 def boot(ocan):
 

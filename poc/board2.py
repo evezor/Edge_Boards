@@ -3,7 +3,18 @@
 
 import time
 
+import machine
+
 from ocan import OCan
+
+def init_board(manifest):
+    if "driver" in manifest:
+        d = __import__(manifest['driver'])
+        print(d)
+        if "init" in manifest:
+            i = getattr(d,manifest['init'])
+            print(i)
+            i()
 
 def boot(ocan):
 
@@ -69,7 +80,8 @@ def drink(ocan):
         last_tick = time.ticks_ms()
 
 
-def main():
+def main(manifest):
+    init_board(manifest)
     ocan = OCan()
     # drink(ocan)
     boot(ocan)

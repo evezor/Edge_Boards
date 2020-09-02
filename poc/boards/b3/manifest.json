@@ -1,0 +1,5 @@
+{"model": "b3",
+"main": "board2",
+"driver": "b3",
+"init": "wake_up"
+}

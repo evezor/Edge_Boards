@@ -52,7 +52,7 @@ def spew(ocan):
             ocan.send(channel, cid, bonus, 'message!')
 
 
-def main():
+def main(manifest):
     ocan = OCan()
     # spew(ocan)
     zorg(ocan)

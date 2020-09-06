@@ -26,7 +26,7 @@ def boot(ocan):
     # >>> binascii.unhexlify('ff0000ff')
     # b'\xff\x00\x00\xff'
     # mac = b'\xff\x00\x00\xff'
-    mac = machine.unique_id()[-5:]
+    mac = bytes(list(machine.unique_id())[::2])
 
     print("state 1")
     # hello zorg, I am here

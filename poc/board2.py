@@ -5,7 +5,7 @@ import time
 
 import machine
 
-from ocan import OCan
+from ocan import * # OCan
 
 def init_board(manifest):
     if "driver" in manifest:
@@ -30,35 +30,40 @@ def boot(ocan):
 
     print("state 1")
     # hello zorg, I am here
-    ocan.send("NWK", 0, 0, b'')
+    ocan.send("NWK", BOARD_NO_ID, NWK_BOARD_IAM, b'iam bord')
 
-    # wait for Zorg to wake up
+    # wait for Zorg to be awwake
     ocan._setfilter(0, (0,0) )
     beer = None
     while beer is None:
         beer = ocan.recieve(0, timeout=5000)
-    # zorg: who are you?
+        if beer is not None \
+                and beer.cid == ZORG_CANID \
+                and beer.header == NWK_ZORG_IAM:
+            break
+        else:
+            beer=None
+
     print("state 2")
-
+    # zorg: who are you?
     # I am foof:
-    ocan.send("NWK", 0, 1, mac )
+    ocan.send("NWK", BOARD_NO_ID, NWK_BOARD_DISCOVER, mac )
 
+    print("state 3")
     # wait for Zorg to assign a can_id
-    ocan._setfilter(0, (0,0) )
     can_id = None
     while can_id is None:
-        beer = ocan.recieve(0,timeout=1000)
+        beer = ocan.recieve(0, timeout=1000)
         if beer is None:
             continue
 
-        print("state 3")
-        hacky_1 = 1
-        if beer.bonus == hacky_1 and beer.data == mac:
-            can_id = beer.cid
-            break
+        if beer.channel=='NWK' \
+            and beer.header == NWK_ZORG_OFFER \
+            and beer.data == mac:
+                can_id = beer.cid
+                break
 
-    print("booted!")
-
+    print("booted! can_id:{}".format(can_id))
 
 
 def drink(ocan):
@@ -71,14 +76,14 @@ def drink(ocan):
     while True:
 
         beer = ocan.recieve()
-        print(beer.channel, beer.cid, beer.bonus, beer.data, end=' ')
+        print(beer.channel, beer.cid, beer.header, beer.data, end=' ')
 
         if last_num is not None:
-            assert beer.bonus == last_num + 1, "sequance broken by {}".format(beer.bonus - last_num)
+            assert beer.header == last_num + 1, "sequance broken by {}".format(beer.header - last_num)
             ticks = time.ticks_ms() - last_tick
             print("*"*ticks)
 
-        last_num = beer.bonus
+        last_num = beer.header
         last_tick = time.ticks_ms()
 
 

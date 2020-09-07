@@ -11,6 +11,9 @@ from pyb import CAN
 
 import bits
 
+BOARD_NO_ID = 0
+ZORG_CANID = 1
+
 channels = [
         "",
         "",
@@ -29,6 +32,10 @@ channels = [
         "DEBUG",
         ]
 
+NWK_ZORG_IAM = 1
+NWK_BOARD_IAM = 2
+NWK_BOARD_DISCOVER = 3
+NWK_ZORG_OFFER = 4
 
 class OCan():
 
@@ -57,7 +64,7 @@ class OCan():
     def send(self, channel_name, p2, p3, message):
         print("tx: ",channel_name, p2, p3, message)
         channel_num = channels.index(channel_name)
-        msg_id = bits.pack(channel=channel_num, cid=p2, bonus=p3)
+        msg_id = bits.pack(channel=channel_num, cid=p2, header=p3)
         ret = self._send(msg_id, message)
         return ret
 
@@ -78,7 +85,7 @@ class OCan():
 
     def recieve(self, fifo, timeout=0):
         BeerCan = namedtuple('BeerCan', [
-            "channel", "cid", "bonus",
+            "channel", "cid", "header",
             "rtr", "fmi", "data",
             ])
 
@@ -89,7 +96,7 @@ class OCan():
             can_id, rtr, fmi, data = ret
             r2 = bits.unpack(can_id)
             channel_name = channels[ r2['channel'] ]
-            beercan = BeerCan( channel_name, r2['cid'], r2['bonus'],
+            beercan = BeerCan( channel_name, r2['cid'], r2['header'],
                     rtr, fmi, data, )
 
         print("rx: ",beercan)

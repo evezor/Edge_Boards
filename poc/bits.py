@@ -6,7 +6,7 @@ from collections import OrderedDict
 bundle = OrderedDict()
 bundle["channel"] = 4
 bundle["cid"] = 7
-bundle["bonus"] = 18
+bundle["header"] = 18
 
 bundle_size = sum(bundle.values())
 assert bundle_size == 29, "bundle_size don't add up to 21"
@@ -57,8 +57,8 @@ def unpack(b):
 
 def show_it():
 
-    def check(channel, cid, bonus):
-        b = pack(channel=channel, cid=cid, bonus=bonus)
+    def check(channel, cid, header):
+        b = pack(channel=channel, cid=cid, header=header)
         show(b)
         print(unpack(b))
 
@@ -68,7 +68,7 @@ def show_it():
     # all the bits:
     check(channel=2 ** bundle["channel"] - 1,
             cid=2 ** bundle["cid"] - 1,
-            bonus=2 ** bundle["bonus"] - 1)
+            header=2 ** bundle["header"] - 1)
 
     # one too many bits:
     check(2 ** bundle["channel"], 0,0)

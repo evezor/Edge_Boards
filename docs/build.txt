@@ -1,0 +1,35 @@
+# build.txt
+
+# for building MP and CP
+
+# install build deps n tool chain n...
+
+# https://learn.adafruit.com/building-circuitpython
+
+sudo adduser juser dialout
+
+sudo apt install build-essential libffi-dev pkg-config
+sudo apt install gettext
+
+git clone https://github.com/micropython/micropython
+git clone --recurse-submodules https://github.com/adafruit/circuitpython
+
+# https://github.com/micropython/micropython#the-micropython-cross-compiler-mpy-cross
+
+# https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+
+wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+
+tar xvf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+
+vim ~/.bashrc
+
+export PATH=$PATH:/home/juser/temp/gcc-arm-none-eabi-9-2020-q2-update/bin
+export BOARD=ADAFRUIT_F405_EXPRESS
+
+cd ports/stm32
+
+make
+make flash
+make deploy
+

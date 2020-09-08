@@ -62,11 +62,13 @@ class OCan():
 
         self.can.send(message, msg_id)
 
-    def send(self, channel_name, can_id, p3, message):
-        print("tx: ",channel_name, can_id, p3, message)
+    def send(self, channel_name, can_id, header, message):
+        print("tx: ",channel_name, can_id, header, message)
         channel_num = channels.index(channel_name)
 
-        msg_id = bits.pack(channel=channel_num, can_id=can_id, header=p3)
+        msg_id = bits.pack(
+                channel=channel_num, can_id=can_id, header=header)
+
         ret = self._send(msg_id, message)
         return ret
 

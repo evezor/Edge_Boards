@@ -37,6 +37,7 @@ NWK_BOARD_IAM = 2
 NWK_BOARD_DISCOVER = 3
 NWK_ZORG_OFFER = 4
 
+
 class OCan():
 
     def __init__(self, bus=1):
@@ -61,10 +62,11 @@ class OCan():
 
         self.can.send(message, msg_id)
 
-    def send(self, channel_name, p2, p3, message):
-        print("tx: ",channel_name, p2, p3, message)
+    def send(self, channel_name, can_id, p3, message):
+        print("tx: ",channel_name, can_id, p3, message)
         channel_num = channels.index(channel_name)
-        msg_id = bits.pack(channel=channel_num, cid=p2, header=p3)
+
+        msg_id = bits.pack(channel=channel_num, can_id=can_id, header=p3)
         ret = self._send(msg_id, message)
         return ret
 
@@ -85,7 +87,7 @@ class OCan():
 
     def recieve(self, fifo, timeout=0):
         BeerCan = namedtuple('BeerCan', [
-            "channel", "cid", "header",
+            "channel", "can_id", "header",
             "rtr", "fmi", "data",
             ])
 
@@ -96,7 +98,7 @@ class OCan():
             can_id, rtr, fmi, data = ret
             r2 = bits.unpack(can_id)
             channel_name = channels[ r2['channel'] ]
-            beercan = BeerCan( channel_name, r2['cid'], r2['header'],
+            beercan = BeerCan( channel_name, r2['can_id'], r2['header'],
                     rtr, fmi, data, )
 
         print("rx: ",beercan)

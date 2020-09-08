@@ -38,7 +38,7 @@ def boot(ocan):
     while beer is None:
         beer = ocan.recieve(0, timeout=5000)
         if beer is not None \
-                and beer.cid == ZORG_CANID \
+                and beer.can_id == ZORG_CANID \
                 and beer.header == NWK_ZORG_IAM:
             break
         else:
@@ -60,7 +60,7 @@ def boot(ocan):
         if beer.channel=='NWK' \
             and beer.header == NWK_ZORG_OFFER \
             and beer.data == mac:
-                can_id = beer.cid
+                can_id = beer.can_id
                 break
 
     print("booted! can_id:{}".format(can_id))
@@ -76,7 +76,7 @@ def drink(ocan):
     while True:
 
         beer = ocan.recieve()
-        print(beer.channel, beer.cid, beer.header, beer.data, end=' ')
+        print(beer.channel, beer.can_id, beer.header, beer.data, end=' ')
 
         if last_num is not None:
             assert beer.header == last_num + 1, "sequance broken by {}".format(beer.header - last_num)

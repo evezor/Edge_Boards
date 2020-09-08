@@ -5,12 +5,11 @@ from collections import OrderedDict
 
 bundle = OrderedDict()
 bundle["channel"] = 4
-bundle["cid"] = 7
+bundle["can_id"] = 7
 bundle["header"] = 18
 
 bundle_size = sum(bundle.values())
 assert bundle_size == 29, "bundle_size don't add up to 21"
-
 
 def pack(**kwargs):
 
@@ -57,8 +56,8 @@ def unpack(b):
 
 def show_it():
 
-    def check(channel, cid, header):
-        b = pack(channel=channel, cid=cid, header=header)
+    def check(channel, can_id, header):
+        b = pack(channel=channel, can_id=can_id, header=header)
         show(b)
         print(unpack(b))
 
@@ -67,7 +66,7 @@ def show_it():
 
     # all the bits:
     check(channel=2 ** bundle["channel"] - 1,
-            cid=2 ** bundle["cid"] - 1,
+            can_id=2 ** bundle["can_id"] - 1,
             header=2 ** bundle["header"] - 1)
 
     # one too many bits:

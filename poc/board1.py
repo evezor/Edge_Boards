@@ -18,8 +18,8 @@ def zorg(ocan):
     print("zorging...")
 
     macs = OrderedDict()
-    macs[None] = {'cid': BOARD_NO_ID}  # unconfigured Edge
-    macs['zorg'] = {'cid': ZORG_CANID} # maybe this and that go in ocan or bits
+    macs[None] = {'can_id': BOARD_NO_ID}  # unconfigured Edge
+    macs['zorg'] = {'can_id': ZORG_CANID} # maybe this and that go in ocan or bits
 
     print("zorg wakes up")
     iam_zorg()
@@ -32,14 +32,14 @@ def zorg(ocan):
         if beer is None:
             continue
 
-        elif beer.cid==macs[None]['cid'] \
+        elif beer.can_id==macs[None]['can_id'] \
                 and beer.header==NWK_BOARD_IAM:
             # if Edge wakes up, tell it Zorg is awake
             iam_zorg()
 
-        elif beer.cid==macs[None]['cid'] \
+        elif beer.can_id==macs[None]['can_id'] \
                 and beer.header==NWK_BOARD_DISCOVER:
-            # Edge asks for cid
+            # Edge asks for can_id
             mac = beer.data
             if mac not in macs:
                 macs[mac] = {}
@@ -54,9 +54,9 @@ def spew(ocan):
         for i in range(536870911):
             # channel = i % 2 ** bits.bundle["channel"]
             channel = 'DEBUG'
-            cid = i % 2 ** bits.bundle["cid"]
+            can_id = i % 2 ** bits.bundle["can_id"]
             header = i
-            ocan.send(channel, cid, header, 'message!')
+            ocan.send(channel, can_id, header, 'message!')
 
 
 def main(manifest):

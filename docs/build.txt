@@ -33,3 +33,4 @@ make
 make flash
 make deploy
 
+CP: storage.erase_filesystem()

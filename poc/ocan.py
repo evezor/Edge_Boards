@@ -7,11 +7,11 @@
 import time
 import random
 
-from collections import namedtuple
+from collections import OrderedDict, namedtuple
 
 from pyb import CAN
 
-from bundle import CanMessageId, Header
+from bundle import Bundle
 
 BOARD_NO_ID = 0
 ZORG_CANID = 1
@@ -40,6 +40,23 @@ NWK = [
 "BOARD_DISCOVER",
 "ZORG_OFFER",
 ]
+
+class CanMessageId(Bundle):
+
+    def __init__(self):
+        self.bundle = OrderedDict()
+        self.bundle["channel"] = 4
+        self.bundle["can_id"] = 7
+        self.bundle["header"] = 18
+        self.bundle_size = 29
+
+class Header(Bundle):
+
+    def __init__(self):
+        self.bundle = OrderedDict()
+        self.bundle["rfe"] = 4
+        self.bundle["random"] = 14
+        self.bundle_size = 18
 
 class OCan():
 

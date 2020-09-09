@@ -1,9 +1,7 @@
 # bundle.py
-# pack values into a bundle of bits
+# pack values in and out of a bundle of bits
 
-from collections import OrderedDict
 from collections import namedtuple
-
 
 class Bundle():
 
@@ -57,27 +55,9 @@ class Bundle():
             print("{}: {}".format(k, bits[s:e]))
             s += size
 
-
-class CanMessageId(Bundle):
-
-    def __init__(self):
-        self.bundle = OrderedDict()
-        self.bundle["channel"] = 4
-        self.bundle["can_id"] = 7
-        self.bundle["header"] = 18
-        self.bundle_size = 29
-
-
-class Header(Bundle):
-
-    def __init__(self):
-        self.bundle = OrderedDict()
-        self.bundle["rfe"] = 4
-        self.bundle["random"] = 14
-        self.bundle_size = 18
-
-
 def demo():
+
+    from ocan import CanMessageId, Header
 
     def check(channel, can_id, header):
         can = CanMessageId()

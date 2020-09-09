@@ -5,11 +5,13 @@
 # https://docs.micropython.org/en/latest/library/pyb.CAN.html#pyb.CAN.info
 
 import time
+import random
+
 from collections import namedtuple
 
 from pyb import CAN
 
-from bundle import CanMessageId
+from bundle import CanMessageId, Header
 
 BOARD_NO_ID = 0
 ZORG_CANID = 1
@@ -38,12 +40,6 @@ NWK = [
 "BOARD_DISCOVER",
 "ZORG_OFFER",
 ]
-
-NWK_ZORG_IAM = 1
-NWK_BOARD_IAM = 2
-NWK_BOARD_DISCOVER = 3
-NWK_ZORG_OFFER = 4
-
 
 class OCan():
 
@@ -74,6 +70,12 @@ class OCan():
         channel_num = channels.index(channel_name)
 
         ci = CanMessageId()
+
+        if channel_name == "NWK":
+            # this has got to go.  somewhere.
+            hi = Header()
+            header = hi.pack( rfe=NWK.index(header), random=random.getrandbits(14))
+
         msg_id = ci.pack(
                 channel=channel_num, can_id=can_id, header=header)
 
@@ -109,7 +111,15 @@ class OCan():
             ci = CanMessageId()
             r2 = ci.unpack(can_id)
             channel_name = channels[ r2.channel ]
-            beercan = BeerCan( channel_name, r2.can_id, r2.header,
+
+            if channel_name == "NWK":
+                hi = Header()
+                header = hi.unpack( r2.header)
+                header = NWK[header.rfe]
+            else:
+                header = r2.header
+
+            beercan = BeerCan( channel_name, r2.can_id, header,
                     rtr, fmi, data, )
 
         print("rx: ",beercan)

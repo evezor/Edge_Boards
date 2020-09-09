@@ -8,12 +8,10 @@ from collections import OrderedDict
 
 from ocan import * # OCan
 
-import bits
-
 def zorg(ocan):
 
     def iam_zorg():
-        ocan.send("NWK", ZORG_CANID, NWK_ZORG_IAM, 'iam zorg')
+        ocan.send("NWK", ZORG_CANID, "ZORG_IAM", 'iam zorg')
 
     print("zorging...")
 
@@ -33,18 +31,18 @@ def zorg(ocan):
             continue
 
         elif beer.can_id==macs[None]['can_id'] \
-                and beer.header==NWK_BOARD_IAM:
+                and beer.header=="BOARD_IAM":
             # if Edge wakes up, tell it Zorg is awake
             iam_zorg()
 
         elif beer.can_id==macs[None]['can_id'] \
-                and beer.header==NWK_BOARD_DISCOVER:
+                and beer.header=="BOARD_DISCOVER":
             # Edge asks for can_id
             mac = beer.data
             if mac not in macs:
                 macs[mac] = {}
             can_id = list(macs.keys()).index(mac)
-            ocan.send("NWK", can_id, NWK_ZORG_OFFER, mac)
+            ocan.send("NWK", can_id, "ZORG_OFFER", mac)
 
 def spew(ocan):
     # all the numbers as fast as we can

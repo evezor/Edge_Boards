@@ -30,7 +30,7 @@ def boot(ocan):
 
     print("state 1")
     # hello zorg, I am here
-    ocan.send("NWK", BOARD_NO_ID, NWK_BOARD_IAM, b'iam bord')
+    ocan.send("NWK", BOARD_NO_ID, "BOARD_IAM", b'iam bord')
 
     # wait for Zorg to be awwake
     ocan._setfilter(0, (0,0) )
@@ -39,7 +39,7 @@ def boot(ocan):
         beer = ocan.recieve(0, timeout=5000)
         if beer is not None \
                 and beer.can_id == ZORG_CANID \
-                and beer.header == NWK_ZORG_IAM:
+                and beer.header == "ZORG_IAM":
             break
         else:
             beer=None
@@ -47,7 +47,7 @@ def boot(ocan):
     print("state 2")
     # zorg: who are you?
     # I am foof:
-    ocan.send("NWK", BOARD_NO_ID, NWK_BOARD_DISCOVER, mac )
+    ocan.send("NWK", BOARD_NO_ID, "BOARD_DISCOVER", mac )
 
     print("state 3")
     # wait for Zorg to assign a can_id
@@ -58,7 +58,7 @@ def boot(ocan):
             continue
 
         if beer.channel=='NWK' \
-            and beer.header == NWK_ZORG_OFFER \
+            and beer.header == "ZORG_OFFER" \
             and beer.data == mac:
                 can_id = beer.can_id
                 break

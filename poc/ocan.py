@@ -9,7 +9,7 @@ from collections import namedtuple
 
 from pyb import CAN
 
-import bits
+from bundle import CanMessageId
 
 BOARD_NO_ID = 0
 ZORG_CANID = 1
@@ -31,6 +31,13 @@ channels = [
         "",
         "DEBUG",
         ]
+
+NWK = [
+"ZORG_IAM",
+"BOARD_IAM",
+"BOARD_DISCOVER",
+"ZORG_OFFER",
+]
 
 NWK_ZORG_IAM = 1
 NWK_BOARD_IAM = 2
@@ -66,7 +73,8 @@ class OCan():
         print("tx: ",channel_name, can_id, header, message)
         channel_num = channels.index(channel_name)
 
-        msg_id = bits.pack(
+        ci = CanMessageId()
+        msg_id = ci.pack(
                 channel=channel_num, can_id=can_id, header=header)
 
         ret = self._send(msg_id, message)
@@ -98,9 +106,10 @@ class OCan():
             beercan = None
         else:
             can_id, rtr, fmi, data = ret
-            r2 = bits.unpack(can_id)
-            channel_name = channels[ r2['channel'] ]
-            beercan = BeerCan( channel_name, r2['can_id'], r2['header'],
+            ci = CanMessageId()
+            r2 = ci.unpack(can_id)
+            channel_name = channels[ r2.channel ]
+            beercan = BeerCan( channel_name, r2.can_id, r2.header,
                     rtr, fmi, data, )
 
         print("rx: ",beercan)

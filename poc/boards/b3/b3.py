@@ -46,13 +46,14 @@ class b3:
         v = 0 if oo == "off" else 1
         self.light_pins[light_no].value(v)
 
-    def light_0_on(self):
+    def light_1_on(self):
         self.light_oo(0, "on")
 
-    def light_0_off(self):
+    def light_1_off(self):
         self.light_oo(0, "off")
 
     def ck_buttons(self):
+        # maybe not used
 
         changes = []
         for i in range(self.button_count):
@@ -62,6 +63,22 @@ class b3:
                 self.button_states[i] = v
 
         return changes
+
+    def button_1_on(self, parameter_table):
+        button_no = 0
+        v = self.button_pins[button_no].value()
+        if parameter_table["button_1"]['value'] != v:
+            parameter_table["button_1"]['value'] = v
+            # parameter_table["button_1"]['dirty'] = True
+            ret = True
+        else:
+            ret = False
+
+        return ret
+
+    def button_1_off(self, parameter_table):
+        return self.button_1_on(parameter_table)
+
 
     def show_buttons(self):
         while True:

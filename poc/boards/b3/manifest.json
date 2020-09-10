@@ -1,5 +1,33 @@
 {"model": "b3",
 "main": "board2",
 "driver": "b3",
-"init": "init"
+"init": "init",
+
+"parameters": {
+    "button_1": {"default": 1}
+},
+
+"inputs":[
+    {"function": "button_1_on",
+        "parameters": [
+            "button_1"
+        ]
+    },
+    {"function": "button_1_off",
+        "parameters": [
+            "button_1"
+        ]
+    }
+],
+
+"outputs":[
+     {"function": "light_1_on",
+        "parameters": [
+        ]
+    },
+    {"function": "light_1_off",
+        "parameters": [
+        ]
+    }
+]
 }

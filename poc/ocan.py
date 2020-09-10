@@ -115,6 +115,7 @@ class OCan():
         return r
 
     def recieve(self, fifo, timeout=0):
+
         BeerCan = namedtuple('BeerCan', [
             "channel", "can_id", "header",
             "rtr", "fmi", "data",

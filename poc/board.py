@@ -1,0 +1,41 @@
+# board.py
+# abstract class for zorg and edge
+
+import time
+
+from ocan import *
+
+class Board():
+
+    can_id = None
+    ocan = None
+
+    def init_filters(self):
+        self.ocan._setfilter(0, (0,0) )
+
+    def __init__(self, manifest):
+        self.manifest = manifest
+        self.ocan = OCan()
+        self.init_board()
+        self.init_filters()
+        self.boot()
+
+    def init_board(self):
+        # setup Edge hardware (driven by manifest and driver)
+        if "driver" in self.manifest:
+            module = __import__(self.manifest['driver'])
+            print(module)
+            driver = getattr( module, self.manifest['driver'] )()
+            print(driver)
+            if "init" in self.manifest:
+                init = getattr(driver,self.manifest['init'])
+                print(init)
+                init()
+
+            self.driver = module
+
+
+    def boot(self):
+        # Zorg just goes, Edge waits on Zorg
+        pass
+

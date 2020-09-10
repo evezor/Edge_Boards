@@ -5,8 +5,8 @@ manifest = json.load(open('manifest.json'))
 print(manifest)
 
 print("importing...")
-m = __import__(manifest['main'])
+module = __import__(manifest['main'])
 
-print("m.main(manifest)")
-m.main(manifest)
+print("module.main(manifest)")
+module.main(manifest)
 

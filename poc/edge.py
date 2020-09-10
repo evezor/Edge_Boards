@@ -6,28 +6,9 @@ import time
 import machine
 
 from ocan import * # OCan
+from board import Board
 
-class Edge():
-
-    can_id = None
-    ocan = None
-
-    def __init__(self):
-        self.ocan = OCan()
-        self.ocan._setfilter(0, (0,0) )
-
-    def init_board(self, manifest):
-        if "driver" in manifest:
-            module = __import__(manifest['driver'])
-            print(module)
-            driver = getattr( module, manifest['driver'] )()
-            print(driver)
-            if "init" in manifest:
-                init = getattr(driver,manifest['init'])
-                print(init)
-                init()
-
-            self.driver = driver
+class Edge(board):
 
     def boot(self):
 
@@ -76,7 +57,10 @@ class Edge():
         self.can_id = can_id
 
     def iris(self):
-        pass
+        while True:
+            for map in self.maps:
+                print(map)
+
 
 
 def drink(ocan):
@@ -103,9 +87,7 @@ def drink(ocan):
 
 def main(manifest):
     edge = Edge()
-    edge.init_board(manifest)
-    edge.boot()
-    edge.iris()
+    # edge.iris()
 
 
 if __name__=='__main__':

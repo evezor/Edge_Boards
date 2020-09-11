@@ -51,25 +51,54 @@ class Zorg(Board):
 
             return len(sleeping) == 0
 
-        def send_map():
+        def maps_send_board(board_name):
+
+            # TODO: the in/out/parma data is packed into .data here and
+            # unpacked in edge.
+            # the pack/unpack format needs to be consistant.
+            # it would be nice if the pack/unpack code was in the same place.
+
+            print("sending maps to {}".format(board_name))
+            mad_map = self.mapo[board_name]
+            can_id = mad_map['can_id'] # target of these messages
+            for inny in mad_map['inputs']:
+                print(inny)
+                # {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}
+                message = bytes((
+                    channels.index(inny['channel']),
+                    inny['function_no']
+                    ))
+                self.ocan.send("NWK", can_id, "SET_INPUT", message)
+
+            for out in mad_map['outputs']:
+                print(out)
+                # {'source': {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}, 'function_no': 2}
+                # {'source': {'function_no': {1}, 'channel': {0}, 'board_name': {2}}, 'function_no': {3}}
+                # chan, src func, src board, dst func
+                src_board_chan_id = self.mapo[out['source']['board_name']]['can_id']
+                message = bytes((
+                    channels.index(out['source']['channel']),
+                    out['source']['function_no'],
+                    src_board_chan_id,
+                    out['function_no']
+                    ))
+                self.ocan.send("NWK", can_id, "SET_OUTPUT", message)
+
+            for parma in mad_map['parameters']:
+                print(parma)
+                message = bytes((
+                    parma['param_no'],
+                    parma['value'],
+                    ))
+                self.ocan.send("NWK", can_id, "SET_PARMA", message)
+
+            self.ocan.send("NWK", can_id, "RESUME")
+
+        def maps_send_all():
 
             for board_name in self.mapo:
+                maps_send_board(board_name)
 
-                print("sending maps to {}".format(board_name))
-                mad_map = self.mapo[board_name]
-                can_id = mad_map['can_id']
-                for inny in mad_map['inputs']:
-                    print(inny)
-                    # {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}
-                    message = bytes((
-                        channels.index(inny['channel']),
-                        inny['function_no']
-                        ))
-                    self.ocan.send("NWK", can_id, "SEND_INPUT", message)
-                for outs in mad_map['outputs']:
-                    print(outs)
-                for parmas in mad_map['parameters']:
-                    print(parmas)
 
         while True:
 
@@ -91,7 +120,7 @@ class Zorg(Board):
                     # Hello board, have some things
                     assign_can_id(beer.data)
                     if all_awake():
-                        send_map()
+                        maps_send_all()
 
 
 def spew(ocan):

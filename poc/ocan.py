@@ -41,9 +41,9 @@ NWK = [
 "ZORG_OFFER",
 "PAUSE",
 "RESUME",
-"SEND_INPUT",
-"SEND_OUTPUT",
-"SEND_PARMA",
+"SET_INPUT",
+"SET_OUTPUT",
+"SET_PARMA",
 ]
 
 class CanMessageId(Bundle):
@@ -87,7 +87,7 @@ class OCan():
 
         self.can.send(message, msg_id)
 
-    def send(self, channel_name, can_id, header, message):
+    def send(self, channel_name, can_id, header=0, message=b''):
         print("tx: ",channel_name, can_id, header, message)
         channel_num = channels.index(channel_name)
 

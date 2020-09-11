@@ -1,6 +1,6 @@
 {"model": "b3",
 "main": "edge",
-"driver": "b3",
+"driver": "B3",
 "init": "init",
 
 "parameter_table": {
@@ -8,26 +8,12 @@
 },
 
 "inputs":[
-    {"function": "button_1_on",
-        "parameters": [
-            "button_1"
-        ]
-    },
-    {"function": "button_1_off",
-        "parameters": [
-            "button_1"
-        ]
-    }
+    "button_1_on",
+    "button_1_off"
 ],
 
 "outputs":[
-     {"function": "light_1_on",
-        "parameters": [
-        ]
-    },
-    {"function": "light_1_off",
-        "parameters": [
-        ]
-    }
+    "light_1_on",
+    "light_1_off"
 ]
 }

@@ -2,7 +2,7 @@
 import machine
 from machine import Pin
 
-class b3:
+class B3:
 
     can_chip_pins = []
 
@@ -14,6 +14,7 @@ class b3:
 
     def setup_pins(self):
 
+        # CANbus chip
         self.can_chip_pins = [
             Pin("D6", Pin.OUT),
             ]
@@ -64,20 +65,44 @@ class b3:
 
         return changes
 
-    def button_1_on(self, parameter_table):
-        button_no = 0
-        v = self.button_pins[button_no].value()
-        if parameter_table["button_1"]['value'] != v:
-            parameter_table["button_1"]['value'] = v
-            # parameter_table["button_1"]['dirty'] = True
-            ret = True
-        else:
+    def button_1_on(self):
+        # did the button change from off to on?
+        if self.parameter_table["button_1"]['value'] == "on":
+            # already on, can't be more on.
             ret = False
+        else:
+            # check for on:
+            button_no = 0
+            v = self.button_pins[button_no].value()
+            if v == 0:
+                self.parameter_table["button_1"]['value'] = "on"
+                # parameter_table["button_1"]['dirty'] = True
+                ret = True
+            else:
+                # was off, still off.
+                ret = False
 
         return ret
 
-    def button_1_off(self, parameter_table):
-        return self.button_1_on(parameter_table)
+    def button_1_off(self):
+        # did the button change from on to off?
+        if self.parameter_table["button_1"]['value'] == "off":
+            # already off, can't be more on.
+            ret = False
+        else:
+            # check for on:
+            button_no = 0
+            v = self.button_pins[button_no].value()
+            if v == 1:
+                self.parameter_table["button_1"]['value'] = "off"
+                # parameter_table["button_1"]['dirty'] = True
+                ret = True
+            else:
+                # was off, still off.
+                ret = False
+
+        return ret
+
 
 
     def show_buttons(self):

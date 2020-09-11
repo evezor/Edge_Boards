@@ -5,20 +5,23 @@ import time
 
 import machine
 
-from ocan import * # OCan
+from ocan import *
 from board import Board
 
 class Edge(Board):
 
     inputs = []
     outputs = []
+    parameter_table = {}
+
+    pause = True
 
     def boot(self):
 
         print("booting...")
         print("state 0")
 
-        self.parameter_table = self.manifest['parameter_table']
+        self.parameter_table.update(self.manifest['parameter_table'])
 
         # >>> binascii.unhexlify('ff0000ff')
         # b'\xff\x00\x00\xff'
@@ -63,32 +66,75 @@ class Edge(Board):
 
     def drink_beer(self):
 
+        def nwk(beer):
+
+            if beer.header=='SET_INPUT':
+                channel, function_no = list(beer.data)
+                x = {
+                    'channel': channels[channel],
+                    'function': self.manifest['inputs'][function_no]
+                    }
+                self.inputs.append(x)
+                print(channel,function_no,x)
+
+            elif beer.header=='SET_OUTPUT':
+                # chan, src func, src board, dst func
+                channel, src_function_no, src_board, dst_function_no = list(
+                        beer.data)
+                x = {
+                    'channel': channels[channel],
+                    'source': {
+                        'function_no': src_function_no,
+                        'can_id': src_board
+                        },
+                    'function_name': self.manifest['outputs'][dst_function_no]
+                    }
+                self.outputs.append(x)
+                print(x)
+
+            elif beer.header=='SET_PARMA':
+                parma_no, value = list(beer.data)
+                parma_name = list(self.parameter_table.keys())[parma_no]
+
+            elif beer.header=='PAUSE':
+                self.pause = True
+            elif beer.header=='RESUME':
+                self.pause = False
+
         beer = self.ocan.recieve(0)
         if beer is not None:
             if beer.can_id == self.can_id:
 
-                if beer.header=='SEND_INPUT':
+                if beer.channel == "NWK":
+                    nwk(beer)
 
-                    channel, function_no = list(beer.data)
-                    print(channel,function_no)
-                    print(self.manifest['inputs'])
-                    print(self.manifest)
-                    self.inputs.append({
-                        'channel': channel,
-                        'function': self.manifest['inputs'][function_no]
-                        })
+            if not self.pause and beer.channel in ["FH", "FM", "FL"]:
+                # BeerCan(channel='FM', can_id=2, header=0, ... data=b'')
+                # do we care about this?
+                for output in self.outputs:
+                    print(output)
+                    if  output['channel'] == beer.channel \
+                            and output['source']['function_no'] == beer.header \
+                            and output['source']['can_id'] == beer.can_id:
 
-                elif beer.header=='RESUME':
-                    pass
+                        function_name = output['function_name']
+                        function = getattr(self.driver, function_name)
+                        ret = function()
+
 
     def check_inputs(self):
         for inny in self.inputs:
-            function_name = inny['function']['function']
+            # print(inny)
+            # {'channel': 'FM', 'function': 'button_1_on'}
+            function_name = inny['function']
             function = getattr(self.driver, function_name)
-            ret = function(self.parameter_table)
+            ret = function()
             if ret:
                 # print( "{}: {}".format( function_name )
-                print( function_name )
+                channel = inny['channel']
+                function_no = self.manifest['inputs'].index(function_name)
+                print( function_name, self.parameter_table['button_1'] )
+                self.ocan.send(channel, self.can_id, header=function_no)
 
 
     def iris(self):
@@ -96,7 +142,8 @@ class Edge(Board):
         while True:
 
             self.drink_beer()
-            self.check_inputs()
+            if not self.pause:
+                self.check_inputs()
 
 
 

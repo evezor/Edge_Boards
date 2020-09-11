@@ -31,6 +31,7 @@ class Board():
             module = __import__(self.manifest['driver'])
             print(module)
             driver = getattr( module, self.manifest['driver'] )()
+            driver.parameter_table = self.parameter_table
             print(driver)
             if "init" in self.manifest:
                 init = getattr(driver,self.manifest['init'])

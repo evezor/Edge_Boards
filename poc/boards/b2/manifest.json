@@ -1,2 +1,6 @@
 {"model": "b2",
-    "main": "board2"}
+    "main": "edge",
+"inputs":[],
+"outputs":[],
+"parameter_table":{}
+}

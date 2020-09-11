@@ -17,15 +17,15 @@ BOARD_NO_ID = 0
 ZORG_CANID = 1
 
 channels = [
+        "e",
+        "falt",
+        "FH",
         "",
         "",
+        "FM",
         "",
         "",
-        "",
-        "",
-        "",
-        "",
-        "",
+        "FL",
         "",
         "",
         "NWK",
@@ -39,6 +39,11 @@ NWK = [
 "BOARD_IAM",
 "BOARD_DISCOVER",
 "ZORG_OFFER",
+"PAUSE",
+"RESUME",
+"SEND_INPUT",
+"SEND_OUTPUT",
+"SEND_PARMA",
 ]
 
 class CanMessageId(Bundle):
@@ -140,7 +145,8 @@ class OCan():
             beercan = BeerCan( channel_name, r2.can_id, header,
                     rtr, fmi, data, )
 
-        print("rx: ",beercan)
+            print("rx: ",beercan)
+
         return beercan
 
 

@@ -8,12 +8,17 @@ import machine
 from ocan import * # OCan
 from board import Board
 
-class Edge(board):
+class Edge(Board):
+
+    inputs = []
+    outputs = []
 
     def boot(self):
 
         print("booting...")
         print("state 0")
+
+        self.parameter_table = self.manifest['parameter_table']
 
         # >>> binascii.unhexlify('ff0000ff')
         # b'\xff\x00\x00\xff'
@@ -56,10 +61,50 @@ class Edge(board):
         print("booted! can_id:{}".format(can_id))
         self.can_id = can_id
 
+    def drink_beer(self):
+
+        beer = self.ocan.recieve(0)
+        if beer is not None:
+            if beer.can_id == self.can_id:
+
+                if beer.header=='SEND_INPUT':
+
+                    channel, function_no = list(beer.data)
+                    print(channel,function_no)
+                    print(self.manifest['inputs'])
+                    print(self.manifest)
+                    self.inputs.append({
+                        'channel': channel,
+                        'function': self.manifest['inputs'][function_no]
+                        })
+
+                elif beer.header=='RESUME':
+                    pass
+
+    def check_inputs(self):
+        for inny in self.inputs:
+            function_name = inny['function']['function']
+            function = getattr(self.driver, function_name)
+            ret = function(self.parameter_table)
+            if ret:
+                # print( "{}: {}".format( function_name )
+                print( function_name )
+
+
     def iris(self):
+
         while True:
-            for map in self.maps:
-                print(map)
+
+            self.drink_beer()
+            self.check_inputs()
+
+
+
+
+
+
+
+
 
 
 
@@ -86,8 +131,8 @@ def drink(ocan):
 
 
 def main(manifest):
-    edge = Edge()
-    # edge.iris()
+    edge = Edge(manifest)
+    edge.iris()
 
 
 if __name__=='__main__':

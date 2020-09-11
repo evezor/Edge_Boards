@@ -1,10 +1,10 @@
 {"model": "b3",
-"main": "board2",
+"main": "edge",
 "driver": "b3",
 "init": "init",
 
-"parameters": {
-    "button_1": {"default": 1}
+"parameter_table": {
+    "button_1": {"value": 1}
 },
 
 "inputs":[

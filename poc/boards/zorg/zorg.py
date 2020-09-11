@@ -1,5 +1,6 @@
 # zorg.py
 
+import json
 import random
 import time
 
@@ -20,6 +21,9 @@ class Zorg(Board):
         self.macs = OrderedDict()
         self.macs['zorg'] = {'can_id': ZORG_CANID} # maybe this and that go in ocan or bits
 
+        self.mapo = json.load(open('mapo.json'))
+        self.commission = json.load(open('commission.json'))
+
         print("zorg wakes up")
         self.iam_zorg()
 
@@ -27,15 +31,45 @@ class Zorg(Board):
 
         def assign_can_id(mac):
             # Edge asks for can_id
-            if mac not in self.macs:
-                self.macs[mac] = {}
-            can_id = list(self.macs.keys()).index(mac)
+            bigmac = ':'.join( "{:02x}".format(i) for i in mac )
+            print("bigmac: {}".format(bigmac))
+
+            if bigmac not in self.macs:
+                self.macs[bigmac] = {}
+            can_id = list(self.macs.keys()).index(bigmac)
             self.ocan.send("NWK", can_id, "ZORG_OFFER", mac)
 
-            return can_id
+            self.mapo[self.commission[bigmac]]['can_id'] = can_id
 
-        def send_map(can_id):
-            print("sending maps to {}".format(can_id))
+            return
+
+        def all_awake():
+            # Are all of the Edges awake?
+            sleeping = [self.commission[k]
+                    for k in self.commission if k not in self.macs]
+            print(sleeping)
+
+            return len(sleeping) == 0
+
+        def send_map():
+
+            for board_name in self.mapo:
+
+                print("sending maps to {}".format(board_name))
+                mad_map = self.mapo[board_name]
+                can_id = mad_map['can_id']
+                for inny in mad_map['inputs']:
+                    print(inny)
+                    # {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}
+                    message = bytes((
+                        channels.index(inny['channel']),
+                        inny['function_no']
+                        ))
+                    self.ocan.send("NWK", can_id, "SEND_INPUT", message)
+                for outs in mad_map['outputs']:
+                    print(outs)
+                for parmas in mad_map['parameters']:
+                    print(parmas)
 
         while True:
 
@@ -54,10 +88,10 @@ class Zorg(Board):
                     self.iam_zorg()
 
                 elif beer.header=="BOARD_DISCOVER":
-
                     # Hello board, have some things
-                    can_id = assign_can_id(beer.data)
-                    send_map(can_id)
+                    assign_can_id(beer.data)
+                    if all_awake():
+                        send_map()
 
 
 def spew(ocan):

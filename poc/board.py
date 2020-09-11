@@ -8,17 +8,22 @@ from ocan import *
 class Board():
 
     can_id = None
+    pause = True
+
     ocan = None
 
-    def init_filters(self):
-        self.ocan._setfilter(0, (0,0) )
-
     def __init__(self, manifest):
+
         self.manifest = manifest
+
         self.ocan = OCan()
         self.init_board()
         self.init_filters()
+
         self.boot()
+
+    def init_filters(self):
+        self.ocan._setfilter(0, (0,0) )
 
     def init_board(self):
         # setup Edge hardware (driven by manifest and driver)
@@ -32,7 +37,7 @@ class Board():
                 print(init)
                 init()
 
-            self.driver = module
+            self.driver = driver
 
 
     def boot(self):

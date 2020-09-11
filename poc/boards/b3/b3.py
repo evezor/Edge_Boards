@@ -24,8 +24,8 @@ class b3:
             ]
 
         self.button_pins = [
-            Pin("D11", Pin.IN),
-            Pin("D12", Pin.IN),
+            Pin("D11", Pin.IN, Pin.PULL_UP),
+            Pin("D12", Pin.IN, Pin.PULL_UP),
             ]
 
 

@@ -8,6 +8,7 @@
 
 sudo adduser juser dialout
 
+sudo apt install gettext gcc-arm-none-eabi libnewlib-arm-none-eabi
 sudo apt install build-essential libffi-dev pkg-config
 sudo apt install gettext
 
@@ -24,7 +25,7 @@ tar xvf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
 
 vim ~/.bashrc
 
-export PATH=$PATH:/home/juser/temp/gcc-arm-none-eabi-9-2020-q2-update/bin
+export PATH=$PATH:~/gcc-arm-none-eabi-9-2020-q2-update/bin
 export BOARD=ADAFRUIT_F405_EXPRESS
 
 cd ports/stm32

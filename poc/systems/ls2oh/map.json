@@ -1,0 +1,16 @@
+{
+    "boards": {
+        "A": {"model": "b3"},
+        "B": {"model": "b3"},
+        "C": {"model": "b2"}
+    },
+    "maps":
+        [
+        {"priority":"medium",
+            "input": { "board": "A", "function": "button_1_on" },
+            "outputs": [ { "board": "B", "function": "light_1_on" } ] },
+        {"priority":"medium",
+            "input": { "board": "A", "function": "button_1_off" },
+            "outputs": [ { "board": "B", "function": "light_1_off" } ] }
+        ]
+}

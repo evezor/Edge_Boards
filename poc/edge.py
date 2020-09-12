@@ -57,19 +57,19 @@ class Edge(Board):
 
             if beer.channel=='NWK' \
                 and beer.header == "ZORG_OFFER" \
-                and beer.data == mac:
+                and beer.message == mac:
                     can_id = beer.can_id
                     break
 
         print("booted! can_id:{}".format(can_id))
         self.can_id = can_id
 
-    def drink_beer(self):
+    def drink_beer(self, beer=None):
 
         def nwk(beer):
 
             if beer.header=='SET_INPUT':
-                channel, function_no = list(beer.data)
+                channel, function_no = list(beer.message)
                 x = {
                     'channel': channels[channel],
                     'function': self.manifest['inputs'][function_no]
@@ -80,7 +80,7 @@ class Edge(Board):
             elif beer.header=='SET_OUTPUT':
                 # chan, src func, src board, dst func
                 channel, src_function_no, src_board, dst_function_no = list(
-                        beer.data)
+                        beer.message)
                 x = {
                     'channel': channels[channel],
                     'source': {
@@ -93,7 +93,7 @@ class Edge(Board):
                 print(x)
 
             elif beer.header=='SET_PARMA':
-                parma_no, value = list(beer.data)
+                parma_no, value = list(beer.message)
                 parma_name = list(self.parameter_table.keys())[parma_no]
 
             elif beer.header=='PAUSE':
@@ -101,7 +101,11 @@ class Edge(Board):
             elif beer.header=='RESUME':
                 self.pause = False
 
-        beer = self.ocan.recieve(0)
+
+        if beer is None:
+            # if we don't have any beer, try to get some.
+            beer = self.ocan.recieve(0)
+
         if beer is not None:
             if beer.can_id == self.can_id:
 
@@ -109,8 +113,8 @@ class Edge(Board):
                     nwk(beer)
 
             if not self.pause and beer.channel in ["FH", "FM", "FL"]:
-                # BeerCan(channel='FM', can_id=2, header=0, ... data=b'')
-                # do we care about this?
+                # BeerCan(channel='FM', can_id=2, header=0, ... message=b'')
+                # see if this message should trigger any outputs
                 for output in self.outputs:
                     print(output)
                     if  output['channel'] == beer.channel \
@@ -133,8 +137,14 @@ class Edge(Board):
                 # print( "{}: {}".format( function_name )
                 channel = inny['channel']
                 function_no = self.manifest['inputs'].index(function_name)
+                message = bytes()
                 print( function_name, self.parameter_table['button_1'] )
-                self.ocan.send(channel, self.can_id, header=function_no)
+                beer = self.ocan.send(
+                        channel, self.can_id, header=function_no, message=message)
+                # incase there are local outputs:
+                self.drink_beer( beer )
+
+        return None
 
 
     def iris(self):

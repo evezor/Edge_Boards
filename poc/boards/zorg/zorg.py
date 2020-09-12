@@ -53,7 +53,7 @@ class Zorg(Board):
 
         def maps_send_board(board_name):
 
-            # TODO: the in/out/parma data is packed into .data here and
+            # TODO: the in/out/parma message is packed into .message here and
             # unpacked in edge.
             # the pack/unpack format needs to be consistant.
             # it would be nice if the pack/unpack code was in the same place.
@@ -118,7 +118,7 @@ class Zorg(Board):
 
                 elif beer.header=="BOARD_DISCOVER":
                     # Hello board, have some things
-                    assign_can_id(beer.data)
+                    assign_can_id(beer.message)
                     if all_awake():
                         maps_send_all()
 

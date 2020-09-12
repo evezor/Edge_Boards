@@ -46,6 +46,11 @@ NWK = [
 "SET_PARMA",
 ]
 
+BeerCan = namedtuple('BeerCan', [
+    "channel", "can_id", "header",
+    "rtr", "fmi", "message",
+    ])
+
 class CanMessageId(Bundle):
 
     def __init__(self):
@@ -102,7 +107,11 @@ class OCan():
                 channel=channel_num, can_id=can_id, header=header)
 
         ret = self._send(msg_id, message)
-        return ret
+
+        beer = BeerCan( channel_name, can_id, header,
+                None, None, message )
+
+        return beer
 
 
     def _setfilter(self, fifo, params):
@@ -121,16 +130,12 @@ class OCan():
 
     def recieve(self, fifo, timeout=0):
 
-        BeerCan = namedtuple('BeerCan', [
-            "channel", "can_id", "header",
-            "rtr", "fmi", "data",
-            ])
-
         ret = self._recieve(fifo, timeout)
+
         if ret is None:
             beercan = None
         else:
-            can_id, rtr, fmi, data = ret
+            can_id, rtr, fmi, message  = ret
             ci = CanMessageId()
             r2 = ci.unpack(can_id)
             channel_name = channels[ r2.channel ]
@@ -143,9 +148,9 @@ class OCan():
                 header = r2.header
 
             beercan = BeerCan( channel_name, r2.can_id, header,
-                    rtr, fmi, data, )
+                    rtr, fmi, message )
 
-            print("rx: ",beercan)
+            print("rx: ", beercan)
 
         return beercan
 

@@ -53,6 +53,13 @@ class B3:
     def light_1_off(self):
         self.light_oo(0, "off")
 
+    def light_2_on(self):
+        self.light_oo(1, "on")
+
+    def light_2_off(self):
+        self.light_oo(1, "off")
+
+
     def ck_buttons(self):
         # maybe not used
 

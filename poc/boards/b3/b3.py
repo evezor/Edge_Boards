@@ -65,17 +65,17 @@ class B3:
 
         return changes
 
-    def button_1_on(self):
+    def button_x_on(self, button_no):
         # did the button change from off to on?
-        if self.parameter_table["button_1"]['value'] == "on":
+        parameter_name = "button_{}".format(button_no+1)
+        if self.parameter_table[parameter_name]['value'] == "on":
             # already on, can't be more on.
             ret = False
         else:
             # check for on:
-            button_no = 0
             v = self.button_pins[button_no].value()
             if v == 0:
-                self.parameter_table["button_1"]['value'] = "on"
+                self.parameter_table[parameter_name]['value'] = "on"
                 # parameter_table["button_1"]['dirty'] = True
                 ret = True
             else:
@@ -84,17 +84,17 @@ class B3:
 
         return ret
 
-    def button_1_off(self):
+    def button_x_off(self, button_no):
         # did the button change from on to off?
-        if self.parameter_table["button_1"]['value'] == "off":
-            # already off, can't be more on.
+        parameter_name = "button_{}".format(button_no+1)
+        if self.parameter_table[parameter_name]['value'] == "off":
+            # already off, can't be more off.
             ret = False
         else:
             # check for on:
-            button_no = 0
             v = self.button_pins[button_no].value()
             if v == 1:
-                self.parameter_table["button_1"]['value'] = "off"
+                self.parameter_table[parameter_name]['value'] = "off"
                 # parameter_table["button_1"]['dirty'] = True
                 ret = True
             else:
@@ -103,6 +103,17 @@ class B3:
 
         return ret
 
+    def button_1_on(self):
+        return self.button_x_on(0)
+
+    def button_1_off(self):
+        return self.button_x_off(0)
+
+    def button_2_on(self):
+        return self.button_x_on(1)
+
+    def button_2_off(self):
+        return self.button_x_off(1)
 
 
     def show_buttons(self):

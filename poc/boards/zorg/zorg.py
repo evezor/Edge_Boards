@@ -6,10 +6,21 @@ import time
 
 from collections import OrderedDict
 
-from ocan import * # OCan
+from ocan import *
 from board import Board
 
+# System_States
+OFF=1
+BOOTING=2
+STARTING=3
+RUNNING=4
+PAUSED=5
+FALT=6
+
+
 class Zorg(Board):
+
+    system_state = OFF
 
     def iam_zorg(self):
         self.ocan.send("NWK", ZORG_CANID, "ZORG_IAM", 'iam zorg')
@@ -17,6 +28,8 @@ class Zorg(Board):
     def boot(self):
 
         print("zorging...")
+
+        self.system_state = BOOTING
 
         self.macs = OrderedDict()
         self.macs['zorg'] = {'can_id': ZORG_CANID} # maybe this and that go in ocan or bits
@@ -26,6 +39,8 @@ class Zorg(Board):
 
         print("zorg wakes up")
         self.iam_zorg()
+
+        self.system_state = STARTING
 
     def zorg(self):
 
@@ -39,9 +54,27 @@ class Zorg(Board):
             can_id = list(self.macs.keys()).index(bigmac)
             self.ocan.send("NWK", can_id, "ZORG_OFFER", mac)
 
-            self.mapo[self.commission[bigmac]]['can_id'] = can_id
+            board_name = self.commission[bigmac]
+            self.mapo[board_name]['can_id'] = can_id
+            heart_beat(can_id)
 
             return
+
+        def send_falt():
+            self.ocan.send("falt", ZORG_CANID)
+
+        def heart_beat(can_id):
+            mac = list(self.macs.keys())[can_id]
+            board_name = self.commission[mac]
+            self.mapo[board_name]['heart_beat'] = time.time()
+
+        def ck_hearts():
+            for board_name in self.mapo:
+                board = self.mapo[board_name]
+                if board['heart_beat'] < time.time()-2:
+                    print("no pulse: {}".format(board))
+                    send_falt()
+                    self.system_state = FALT
 
         def all_awake():
             # Are all of the Edges awake?
@@ -99,15 +132,7 @@ class Zorg(Board):
             for board_name in self.mapo:
                 maps_send_board(board_name)
 
-
-        while True:
-
-            beer = self.ocan.recieve(fifo=0, timeout=-1)
-            # blocking here:
-            if beer is None:
-                continue
-
-            # all the zorg things:
+        def nwk(beer):
 
             if beer.can_id == BOARD_NO_ID:
                 # unconfigured Edge
@@ -119,9 +144,28 @@ class Zorg(Board):
                 elif beer.header=="BOARD_DISCOVER":
                     # Hello board, have some things
                     assign_can_id(beer.message)
+                    # TODO: I don't like this here:
                     if all_awake():
                         maps_send_all()
+                        self.system_state = RUNNING
 
+            elif beer.header=="HEART_BEAT":
+                heart_beat(beer.can_id)
+
+
+        # main zorg loop:
+        while True:
+
+            if self.system_state == RUNNING:
+                ck_hearts()
+
+            beer = self.ocan.recieve(fifo=0, timeout=-1)
+
+            if beer is None:
+                continue
+
+            if beer.channel == "NWK":
+                nwk(beer)
 
 def spew(ocan):
     # all the numbers as fast as we can

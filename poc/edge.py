@@ -14,6 +14,7 @@ class Edge(Board):
     outputs = []
     parameter_table = {}
 
+    heart_time = 0
     pause = True
 
     def boot(self):
@@ -64,6 +65,11 @@ class Edge(Board):
         print("booted! can_id:{}".format(can_id))
         self.can_id = can_id
 
+    def heartbeat(self):
+        if self.heart_time <= time.time():
+            beer = self.ocan.send( "NWK", self.can_id, header="HEART_BEAT" )
+            self.heart_time = time.time() + 1
+
     def drink_beer(self, beer=None):
 
         def nwk(beer):
@@ -107,6 +113,10 @@ class Edge(Board):
             beer = self.ocan.recieve(0)
 
         if beer is not None:
+
+            if beer.channel == "falt":
+                self.driver.halt()
+
             if beer.can_id == self.can_id:
 
                 if beer.channel == "NWK":
@@ -133,12 +143,12 @@ class Edge(Board):
             function_name = inny['function']
             function = getattr(self.driver, function_name)
             ret = function()
+            print( function_name, self.parameter_table['button_1'] )
             if ret:
                 # print( "{}: {}".format( function_name )
                 channel = inny['channel']
                 function_no = self.manifest['inputs'].index(function_name)
                 message = bytes()
-                print( function_name, self.parameter_table['button_1'] )
                 beer = self.ocan.send(
                         channel, self.can_id, header=function_no, message=message)
                 # incase there are local outputs:
@@ -151,7 +161,12 @@ class Edge(Board):
 
         while True:
 
+            self.heartbeat()
+
+            # check for messages
             self.drink_beer()
+
+            # check for inputs
             if not self.pause:
                 self.check_inputs()
 

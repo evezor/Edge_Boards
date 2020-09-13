@@ -4,21 +4,21 @@
 "init": "init",
 
 "parameter_table": {
-    "button_1": {"value": 1},
-    "button_2": {"value": 1}
+    "button_0": {"value": 1},
+    "button_1": {"value": 1}
 },
 
 "inputs":[
+    "button_0_on",
+    "button_0_off",
     "button_1_on",
-    "button_1_off",
-    "button_2_on",
-    "button_2_off"
+    "button_1_off"
 ],
 
 "outputs":[
+    "light_0_on",
+    "light_0_off",
     "light_1_on",
-    "light_1_off",
-    "light_2_on",
-    "light_2_off"
+    "light_1_off"
 ]
 }

@@ -94,26 +94,26 @@ class Zorg(Board):
             print("sending maps to {}".format(board_name))
             mad_map = self.mapo[board_name]
             can_id = mad_map['can_id'] # target of these messages
-            for inny in mad_map['inputs']:
-                print(inny)
+            for input_ in mad_map['inputs']:
+                print(input_)
                 # {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}
                 message = bytes((
-                    channels.index(inny['channel']),
-                    inny['function_no']
+                    channels.index(input_['channel']),
+                    input_['function_no']
                     ))
                 self.ocan.send("NWK", can_id, "SET_INPUT", message)
 
-            for out in mad_map['outputs']:
-                print(out)
+            for output in mad_map['outputs']:
+                print(output)
                 # {'source': {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}, 'function_no': 2}
                 # {'source': {'function_no': {1}, 'channel': {0}, 'board_name': {2}}, 'function_no': {3}}
                 # chan, src func, src board, dst func
-                src_board_chan_id = self.mapo[out['source']['board_name']]['can_id']
+                src_board_chan_id = self.mapo[output['source']['board_name']]['can_id']
                 message = bytes((
-                    channels.index(out['source']['channel']),
-                    out['source']['function_no'],
+                    channels.index(output['source']['channel']),
+                    output['source']['function_no'],
                     src_board_chan_id,
-                    out['function_no']
+                    output['function_no']
                     ))
                 self.ocan.send("NWK", can_id, "SET_OUTPUT", message)
 

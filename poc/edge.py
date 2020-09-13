@@ -76,18 +76,17 @@ class Edge(Board):
 
             if beer.header=='SET_INPUT':
                 channel, function_no = list(beer.message)
-                x = {
+                input_ = {
                     'channel': channels[channel],
                     'function': self.manifest['inputs'][function_no]
                     }
-                self.inputs.append(x)
-                print(channel,function_no,x)
+                self.inputs.append(input_)
 
             elif beer.header=='SET_OUTPUT':
                 # chan, src func, src board, dst func
                 channel, src_function_no, src_board, dst_function_no = list(
                         beer.message)
-                x = {
+                output = {
                     'channel': channels[channel],
                     'source': {
                         'function_no': src_function_no,
@@ -95,8 +94,7 @@ class Edge(Board):
                         },
                     'function_name': self.manifest['outputs'][dst_function_no]
                     }
-                self.outputs.append(x)
-                print(x)
+                self.outputs.append(output)
 
             elif beer.header=='SET_PARMA':
                 parma_no, value = list(beer.message)
@@ -116,6 +114,7 @@ class Edge(Board):
 
             if beer.channel == "falt":
                 self.driver.halt()
+                function = getattr(self.driver, function_name)
 
             if beer.can_id == self.can_id:
 
@@ -125,8 +124,8 @@ class Edge(Board):
             if not self.pause and beer.channel in ["FH", "FM", "FL"]:
                 # BeerCan(channel='FM', can_id=2, header=0, ... message=b'')
                 # see if this message should trigger any outputs
+                # TODO: optimize this loop into a dict lookup
                 for output in self.outputs:
-                    print(output)
                     if  output['channel'] == beer.channel \
                             and output['source']['function_no'] == beer.header \
                             and output['source']['can_id'] == beer.can_id:
@@ -137,21 +136,17 @@ class Edge(Board):
 
 
     def check_inputs(self):
-        for inny in self.inputs:
-            # print(inny)
-            # {'channel': 'FM', 'function': 'button_1_on'}
-            function_name = inny['function']
+        for input_ in self.inputs:
+            function_name = input_['function']
             function = getattr(self.driver, function_name)
             ret = function()
-            print( function_name, self.parameter_table['button_1'] )
             if ret:
-                # print( "{}: {}".format( function_name )
-                channel = inny['channel']
+                channel = input_['channel']
                 function_no = self.manifest['inputs'].index(function_name)
                 message = bytes()
                 beer = self.ocan.send(
                         channel, self.can_id, header=function_no, message=message)
-                # incase there are local outputs:
+                # process local outputs:
                 self.drink_beer( beer )
 
         return None
@@ -169,15 +164,6 @@ class Edge(Board):
             # check for inputs
             if not self.pause:
                 self.check_inputs()
-
-
-
-
-
-
-
-
-
 
 
 def drink(ocan):

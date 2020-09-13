@@ -2,6 +2,8 @@
 # driver for b3 board.
 
 import time
+import os
+import pyb
 
 from machine import Pin
 
@@ -52,10 +54,16 @@ class B3:
     def halt(self):
         print("halt.")
         while True:
-            self.light_1_on()
+            self.light_0_on()
             time.sleep(.1)
-            self.light_1_off()
+            self.light_0_off()
             time.sleep(.1)
+
+    def mkfs(self):
+        flash = pyb.Flash()
+        os.umount('/flash')
+        os.VfsFat(flash)
+        os.mount(flash, '/flash')
 
 
     def light_oo(self, light_no, oo):
@@ -64,16 +72,16 @@ class B3:
         v = 0 if oo == "off" else 1
         self.light_pins[light_no].value(v)
 
-    def light_1_on(self):
+    def light_0_on(self):
         self.light_oo(0, "on")
 
-    def light_1_off(self):
+    def light_0_off(self):
         self.light_oo(0, "off")
 
-    def light_2_on(self):
+    def light_1_on(self):
         self.light_oo(1, "on")
 
-    def light_2_off(self):
+    def light_1_off(self):
         self.light_oo(1, "off")
 
     def ck_buttons(self):
@@ -106,7 +114,7 @@ class B3:
     def button_x_off(self, button_no):
         """ did the button change from on to off? """
 
-        parameter_name = "button_{}".format(button_no+1)
+        parameter_name = "button_{}".format(button_no)
 
         pv = self.parameter_table[parameter_name]['value']
         bv = BUTTON[self.button_pins[button_no].value()]
@@ -118,16 +126,16 @@ class B3:
 
         return ret
 
-    def button_1_on(self):
+    def button_0_on(self):
         return self.button_x_on(0)
 
-    def button_1_off(self):
+    def button_0_off(self):
         return self.button_x_off(0)
 
-    def button_2_on(self):
+    def button_1_on(self):
         return self.button_x_on(1)
 
-    def button_2_off(self):
+    def button_1_off(self):
         return self.button_x_off(1)
 
 

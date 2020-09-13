@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 
+from copy import copy
 from pprint import pprint
 
 function_priorities = {
@@ -53,7 +54,7 @@ def doit(args):
                 "function_no": function_no,
                 }
 
-        mapo[board_name]['inputs'].append(source)
+        mapo[board_name]['inputs'].append(copy(source))
 
         source['board_name']=board_name
 

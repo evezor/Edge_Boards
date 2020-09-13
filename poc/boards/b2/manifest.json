@@ -1,5 +1,8 @@
 {"model": "b2",
     "main": "edge",
+"driver": "B2",
+"init": "init",
+
 "inputs":[],
 "outputs":[],
 "parameter_table":{}

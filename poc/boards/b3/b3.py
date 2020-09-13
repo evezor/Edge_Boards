@@ -1,6 +1,14 @@
+# b3.py
+# driver for b3 board.
 
-import machine
+import time
+
 from machine import Pin
+
+BUTTON={
+        0:"on",
+        1:"off"
+        }
 
 class B3:
 
@@ -41,6 +49,15 @@ class B3:
         self.setup_states()
         self.wake_up_can()
 
+    def halt(self):
+        print("halt.")
+        while True:
+            self.light_1_on()
+            time.sleep(.1)
+            self.light_1_off()
+            time.sleep(.1)
+
+
     def light_oo(self, light_no, oo):
         # turn a light on or off
 
@@ -72,40 +89,32 @@ class B3:
         return changes
 
     def button_x_on(self, button_no):
-        # did the button change from off to on?
+        """ did the button change from off to on? """
+
         parameter_name = "button_{}".format(button_no+1)
-        if self.parameter_table[parameter_name]['value'] == "on":
-            # already on, can't be more on.
-            ret = False
-        else:
-            # check for on:
-            v = self.button_pins[button_no].value()
-            if v == 0:
-                self.parameter_table[parameter_name]['value'] = "on"
-                # parameter_table["button_1"]['dirty'] = True
-                ret = True
-            else:
-                # was off, still off.
-                ret = False
+
+        pv = self.parameter_table[parameter_name]['value']
+        bv = BUTTON[self.button_pins[button_no].value()]
+
+        ret = pv=="off" and bv=="on"
+        if ret: print("#1", bv, ret)
+
+        self.parameter_table[parameter_name]['value'] = bv
 
         return ret
 
     def button_x_off(self, button_no):
-        # did the button change from on to off?
+        """ did the button change from on to off? """
+
         parameter_name = "button_{}".format(button_no+1)
-        if self.parameter_table[parameter_name]['value'] == "off":
-            # already off, can't be more off.
-            ret = False
-        else:
-            # check for on:
-            v = self.button_pins[button_no].value()
-            if v == 1:
-                self.parameter_table[parameter_name]['value'] = "off"
-                # parameter_table["button_1"]['dirty'] = True
-                ret = True
-            else:
-                # was off, still off.
-                ret = False
+
+        pv = self.parameter_table[parameter_name]['value']
+        bv = BUTTON[self.button_pins[button_no].value()]
+
+        ret = pv=="on" and bv=="off"
+        if ret: print("#2", bv, ret)
+
+        self.parameter_table[parameter_name]['value'] = bv
 
         return ret
 

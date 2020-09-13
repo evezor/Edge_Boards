@@ -39,15 +39,17 @@ def doit(args):
 
     # for each map, create a tokenized map half,
     # save each half in its board
-    for m in map_max['maps']:
+    for map_ in map_max['maps']:
 
-        board_name = m['input']['board']
+        input_ = map_['input']
 
-        function_name = m['input']['function']
+        board_name = input_['board']
+
+        function_name = input_['function']
         function_no = boards[board_name]['manifest']['inputs'].index(
                 function_name)
 
-        channel = function_priorities[ m['priority'] ]
+        channel = function_priorities[ input_['priority'] ]
 
         source = {
                 "channel": channel,
@@ -58,14 +60,14 @@ def doit(args):
 
         source['board_name']=board_name
 
-        for output in m['outputs']:
-            output_board_name = output['board']
+        for output in map_['outputs']:
+            board_name = output['board']
             function_name = output['function']
             function_no = \
-                    boards[output_board_name]['manifest']['outputs'].index(
+                    boards[board_name]['manifest']['outputs'].index(
                     function_name)
 
-            mapo[output_board_name]['outputs'].append( {
+            mapo[board_name]['outputs'].append( {
                     'source': source,
                     "function_no": function_no,
                     })

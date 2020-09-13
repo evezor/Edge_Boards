@@ -4,13 +4,10 @@
         "B": {"model": "b3"},
         "C": {"model": "b2"}
     },
-    "maps":
-        [
-        {"priority":"medium",
-            "input": { "board": "A", "function": "button_0_on" },
+    "maps": [
+        { "input": { "board": "A", "function": "button_0_on", "priority":"medium" },
             "outputs": [ { "board": "B", "function": "light_0_on" } ] },
-        {"priority":"medium",
-            "input": { "board": "A", "function": "button_0_off" },
+        { "input": { "board": "A", "function": "button_1_on", "priority":"medium" },
             "outputs": [ { "board": "B", "function": "light_0_off" } ] }
-        ]
+    ]
 }

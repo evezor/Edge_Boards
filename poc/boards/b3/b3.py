@@ -7,20 +7,18 @@ import pyb
 
 from machine import Pin
 
+from driver import Driver
+
 BUTTON={
         0:"on",
         1:"off"
         }
 
-class B3:
+class B3(Driver):
 
     can_chip_pins = []
-
     light_pins = []
-
-    button_count = 2
     button_pins = []
-    button_states = []
 
     def setup_pins(self):
 
@@ -40,15 +38,11 @@ class B3:
             ]
 
 
-    def setup_states(self):
-        self.button_states = [ 1, 1 ]
-
     def wake_up_can(self):
         self.can_chip_pins[0].value(0)
 
     def init(self):
         self.setup_pins()
-        self.setup_states()
         self.wake_up_can()
 
     # stops:
@@ -72,30 +66,23 @@ class B3:
 
     # inputs:
 
-    def ck_buttons(self):
-        # maybe not used
+    def read_states(self):
+        v = BUTTON[self.button_pins[0].value()]
+        self.parameter_table["button_0"]['new value'] = v
 
-        changes = []
-        for i in range(self.button_count):
-            v = self.button_pins[i].value()
-            if v != self.button_states[i]:
-                changes.append( (i,v) )
-                self.button_states[i] = v
+        v = BUTTON[self.button_pins[1].value()]
+        self.parameter_table["button_1"]['new value'] = v
 
-        return changes
 
     def button_x_on(self, button_no):
         """ did the button change from off to on? """
 
         parameter_name = "button_{}".format(button_no)
 
-        pv = self.parameter_table[parameter_name]['value']
-        bv = BUTTON[self.button_pins[button_no].value()]
+        ov = self.parameter_table[parameter_name]['old value']
+        nv = self.parameter_table[parameter_name]['new value']
 
-        ret = pv=="off" and bv=="on"
-        if ret: print("#1", bv, ret)
-
-        self.parameter_table[parameter_name]['value'] = bv
+        ret = (ov=="off" and nv=="on")
 
         return ret
 
@@ -104,13 +91,10 @@ class B3:
 
         parameter_name = "button_{}".format(button_no)
 
-        pv = self.parameter_table[parameter_name]['value']
-        bv = BUTTON[self.button_pins[button_no].value()]
+        ov = self.parameter_table[parameter_name]['old value']
+        nv = self.parameter_table[parameter_name]['new value']
 
-        ret = pv=="on" and bv=="off"
-        if ret: print("#2", bv, ret)
-
-        self.parameter_table[parameter_name]['value'] = bv
+        ret = (ov=="on" and nv=="off")
 
         return ret
 
@@ -126,16 +110,6 @@ class B3:
     def button_1_off(self):
         return self.button_x_off(1)
 
-
-    def show_buttons(self):
-        while True:
-            print(
-                self.button_pins[0].value(),
-                self.button_pins[1].value()
-                )
-
-            self.light_pins[0].value(self.button_pins[0].value())
-            self.light_pins[1].value(self.button_pins[1].value())
 
     # outputs:
 

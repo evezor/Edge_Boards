@@ -2,10 +2,9 @@ import machine
 import os
 import pyb
 
-class B2():
+from driver import Driver
 
-    def init(self):
-        pass
+class B2(Driver):
 
     def halt(self):
         machine.reset()

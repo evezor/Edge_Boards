@@ -12,7 +12,6 @@ class Edge(Board):
 
     inputs = []
     outputs = []
-    parameter_table = {}
 
     heart_time = 0
     pause = True
@@ -22,7 +21,7 @@ class Edge(Board):
         print("booting...")
         print("state 0")
 
-        self.parameter_table.update(self.manifest['parameter_table'])
+        self.driver.parameter_table.update(self.manifest['parameter_table'])
 
         # >>> binascii.unhexlify('ff0000ff')
         # b'\xff\x00\x00\xff'
@@ -98,7 +97,7 @@ class Edge(Board):
 
             elif beer.header=='SET_PARMA':
                 parma_no, value = list(beer.message)
-                parma_name = list(self.parameter_table.keys())[parma_no]
+                parma_name = list(self.driver.parameter_table.keys())[parma_no]
 
             elif beer.header=='PAUSE':
                 self.pause = True
@@ -125,12 +124,14 @@ class Edge(Board):
                 # BeerCan(channel='FM', can_id=2, header=0, ... message=b'')
                 # see if this message should trigger any outputs
                 # TODO: optimize this loop into a dict lookup
+                # note: the same input can trigger many outputs.
                 for output in self.outputs:
                     if  output['channel'] == beer.channel \
                             and output['source']['function_no'] == beer.header \
                             and output['source']['can_id'] == beer.can_id:
 
                         function_name = output['function_name']
+                        print(function_name)
                         function = getattr(self.driver, function_name)
                         ret = function()
 
@@ -163,7 +164,9 @@ class Edge(Board):
 
             # check for inputs
             if not self.pause:
+                self.driver.read_states()
                 self.check_inputs()
+                self.driver.save_states()
 
 
 def drink(ocan):

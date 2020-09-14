@@ -51,6 +51,8 @@ class B3:
         self.setup_states()
         self.wake_up_can()
 
+    # stops:
+
     def halt(self):
         print("halt.")
         while True:
@@ -59,6 +61,8 @@ class B3:
             self.light_0_off()
             time.sleep(.1)
 
+    # dangers:
+
     def mkfs(self):
         flash = pyb.Flash()
         os.umount('/flash')
@@ -66,23 +70,7 @@ class B3:
         os.mount(flash, '/flash')
 
 
-    def light_oo(self, light_no, oo):
-        # turn a light on or off
-
-        v = 0 if oo == "off" else 1
-        self.light_pins[light_no].value(v)
-
-    def light_0_on(self):
-        self.light_oo(0, "on")
-
-    def light_0_off(self):
-        self.light_oo(0, "off")
-
-    def light_1_on(self):
-        self.light_oo(1, "on")
-
-    def light_1_off(self):
-        self.light_oo(1, "off")
+    # inputs:
 
     def ck_buttons(self):
         # maybe not used
@@ -148,6 +136,26 @@ class B3:
 
             self.light_pins[0].value(self.button_pins[0].value())
             self.light_pins[1].value(self.button_pins[1].value())
+
+    # outputs:
+
+    def light_oo(self, light_no, oo):
+        # turn a light on or off
+
+        v = 0 if oo == "off" else 1
+        self.light_pins[light_no].value(v)
+
+    def light_0_on(self):
+        self.light_oo(0, "on")
+
+    def light_0_off(self):
+        self.light_oo(0, "off")
+
+    def light_1_on(self):
+        self.light_oo(1, "on")
+
+    def light_1_off(self):
+        self.light_oo(1, "off")
 
 
 

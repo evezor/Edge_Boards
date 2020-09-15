@@ -60,7 +60,9 @@ def doit(args):
 
         source['board_name']=board_name
 
+        print("outputs:")
         for output in map_['outputs']:
+            print(output)
             board_name = output['board']
             function_name = output['function']
             function_no = \
@@ -76,7 +78,7 @@ def doit(args):
     print()
     pprint(mapo)
 
-    mapo_name = os.path.join( args.output_dir, args.name, "mapo.json")
+    mapo_name = os.path.join( args.output_dir, "mapo.json")
     json.dump(mapo, open(mapo_name, 'w'), indent=2)
 
 

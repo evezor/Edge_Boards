@@ -1,9 +1,19 @@
-{"model": "b2",
+{
+    "model": "b2",
     "main": "edge",
-"driver": "B2",
-"init": "init",
+    "driver": "B2",
+    "init": "init",
 
-"inputs":[],
-"outputs":[],
-"parameter_table":{}
+"inputs":[
+    "timer_end"
+    ],
+
+"outputs":[
+    "timer_start"
+    ],
+
+"parameters": {
+    "timer": {"old value": "stop"},
+    "cook time": {"old value": 5}
+    }
 }

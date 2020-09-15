@@ -8,8 +8,7 @@ cp main.py bundle.py ocan.py board.py edge.py driver.py /media/carl/PYBFLASH2
 cp main.py bundle.py ocan.py board.py edge.py driver.py /media/carl/PYBFLASH3
 
 cp boards/zorg/* /media/carl/PYBFLASH
-cp systems/mapo.json systems/ls2oh/commission.json \
-    /media/carl/PYBFLASH
+cp systems/mapo.json systems/ls2oh/commission.json /media/carl/PYBFLASH
 
 cp boards/b2/* /media/carl/PYBFLASH1
 

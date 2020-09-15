@@ -3,7 +3,7 @@
 "driver": "B3",
 "init": "init",
 
-"parameter_table": {
+"parameters": {
     "button_0": {"old value": 1},
     "button_1": {"old value": 1}
 },

@@ -21,8 +21,6 @@ class Edge(Board):
         print("booting...")
         print("state 0")
 
-        self.driver.parameter_table.update(self.manifest['parameter_table'])
-
         # >>> binascii.unhexlify('ff0000ff')
         # b'\xff\x00\x00\xff'
         # mac = b'\xff\x00\x00\xff'

@@ -31,7 +31,12 @@ class Board():
             module = __import__(self.manifest['driver'])
             print(module)
             driver = getattr( module, self.manifest['driver'] )()
-            driver.parameter_table = self.manifest['parameter_table']
+
+            driver.parameter_table = self.manifest['parameters']
+            for parameter_name in driver.parameter_table:
+                driver.parameter_table[parameter_name]['new value'] = \
+                    driver.parameter_table[parameter_name]['old value']
+
             print(driver)
             if "init" in self.manifest:
                 init = getattr(driver,self.manifest['init'])
@@ -39,6 +44,7 @@ class Board():
                 init()
 
             self.driver = driver
+
 
 
     def boot(self):

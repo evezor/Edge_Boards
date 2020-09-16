@@ -1,8 +1,14 @@
 {
     "boards": {
-        "A": {"model": "b3"},
-        "B": {"model": "b3"},
-        "C": {"model": "b2"}
+        "A": {
+            "model": "b3"
+        },
+        "B": {
+            "model": "b3"
+        },
+        "C": {"model": "b2",
+            "heart": {"rate":1}
+        }
     },
 
     "maps": [

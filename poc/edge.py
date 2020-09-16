@@ -13,7 +13,8 @@ class Edge(Board):
     inputs = []
     outputs = []
 
-    heart_time = 0
+    heart = None
+
     pause = True
 
     def boot(self):
@@ -63,9 +64,10 @@ class Edge(Board):
         self.can_id = can_id
 
     def heartbeat(self):
-        if self.heart_time <= time.time():
-            beer = self.ocan.send( "NWK", self.can_id, header="HEART_BEAT" )
-            self.heart_time = time.time() + 1
+        if self.heart is not None:
+            if self.heart['time'] <= time.time():
+                beer = self.ocan.send( "NWK", self.can_id, header="HEARTBEAT" )
+                self.heart['time'] = time.time() + self.heart['rate']
 
     def drink_beer(self, beer=None):
 
@@ -93,7 +95,14 @@ class Edge(Board):
                     }
                 self.outputs.append(output)
 
+            elif beer.header=='HEART_RATE':
+                self.heart = {
+                        'rate': list(beer.message)[0],
+                        'time': time.time(),
+                        }
+
             elif beer.header=='SET_PARMA':
+                # this doesn't look like it does anything useful?
                 parma_no, value = list(beer.message)
                 parma_name = list(self.driver.parameter_table.keys())[parma_no]
 
@@ -109,9 +118,8 @@ class Edge(Board):
 
         if beer is not None:
 
-            if beer.channel == "falt":
+            if beer.channel == "FAULT":
                 self.driver.halt()
-                function = getattr(self.driver, function_name)
 
             if beer.can_id == self.can_id:
 

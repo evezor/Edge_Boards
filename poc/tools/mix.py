@@ -37,6 +37,10 @@ def doit(args):
                 'parameters': []
                 }
 
+        # messy...
+        if "heart" in boards[key]:
+            mapo[key]["heart"] = boards[key]["heart"]
+
     # for each map, create a tokenized map half,
     # save each half in its board
     for map_ in map_max['maps']:

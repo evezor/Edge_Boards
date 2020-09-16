@@ -18,7 +18,7 @@ ZORG_CANID = 1
 
 channels = [
         "e",
-        "falt",
+        "FAULT",
         "FH",
         "",
         "",
@@ -44,7 +44,8 @@ NWK = [
 "SET_INPUT",
 "SET_OUTPUT",
 "SET_PARMA",
-"HEART_BEAT",
+"HEART_RATE",
+"HEARTBEAT",
 ]
 
 BeerCan = namedtuple('BeerCan', [

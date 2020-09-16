@@ -15,7 +15,7 @@ BOOTING=2
 STARTING=3
 RUNNING=4
 PAUSED=5
-FALT=6
+FAULT=6
 
 
 class Zorg(Board):
@@ -56,25 +56,27 @@ class Zorg(Board):
 
             board_name = self.commission[bigmac]
             self.mapo[board_name]['can_id'] = can_id
-            heart_beat(can_id)
 
             return
 
-        def send_falt():
-            self.ocan.send("falt", ZORG_CANID)
+        def send_fault():
+            self.ocan.send("FAULT", ZORG_CANID)
 
-        def heart_beat(can_id):
+        def pulse_log(can_id):
+            # logs the heartbeat from the board
             mac = list(self.macs.keys())[can_id]
             board_name = self.commission[mac]
-            self.mapo[board_name]['heart_beat'] = time.time()
+            self.mapo[board_name]['heart']['pulse'] = time.time()
 
         def ck_hearts():
             for board_name in self.mapo:
                 board = self.mapo[board_name]
-                if board['heart_beat'] < time.time()-2:
-                    print("no pulse: {}".format(board))
-                    send_falt()
-                    self.system_state = FALT
+                if 'heart' in board:
+                    if board['heart']['pulse'] < time.time()-2:
+                        print(board_name, board['heart'])
+                        print("no pulse: {}".format(board))
+                        send_fault()
+                        self.system_state = FAULT
 
         def all_awake():
             # Are all of the Edges awake?
@@ -94,6 +96,13 @@ class Zorg(Board):
             print("sending maps to {}".format(board_name))
             mad_map = self.mapo[board_name]
             can_id = mad_map['can_id'] # target of these messages
+
+            if 'heart' in mad_map:
+                # this looks a lot like a parameter
+                message = bytes([mad_map['heart']['rate']])
+                self.ocan.send("NWK", can_id, "HEART_RATE", message)
+                pulse_log(can_id)
+
             for input_ in mad_map['inputs']:
                 print(input_)
                 # {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}
@@ -149,8 +158,8 @@ class Zorg(Board):
                         maps_send_all()
                         self.system_state = RUNNING
 
-            elif beer.header=="HEART_BEAT":
-                heart_beat(beer.can_id)
+            elif beer.header=="HEARTBEAT":
+                pulse_log(beer.can_id)
 
 
         # main zorg loop:
@@ -159,7 +168,7 @@ class Zorg(Board):
             if self.system_state == RUNNING:
                 ck_hearts()
 
-            beer = self.ocan.recieve(fifo=0, timeout=-1)
+            beer = self.ocan.recieve(fifo=0, timeout=1)
 
             if beer is None:
                 continue

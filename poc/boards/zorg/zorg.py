@@ -59,8 +59,8 @@ class Zorg(Board):
 
             return
 
-        def send_fault():
-            self.ocan.send("FAULT", ZORG_CANID)
+        def send_fault(fault_type):
+            self.ocan.send("FAULT", ZORG_CANID, header=fault_type)
 
         def pulse_log(can_id):
             # logs the heartbeat from the board
@@ -75,7 +75,7 @@ class Zorg(Board):
                     if board['heart']['pulse'] < time.time()-2:
                         print(board_name, board['heart'])
                         print("no pulse: {}".format(board))
-                        send_fault()
+                        send_fault("HALT")
                         self.system_state = FAULT
 
         def all_awake():
@@ -161,6 +161,9 @@ class Zorg(Board):
             elif beer.header=="HEARTBEAT":
                 pulse_log(beer.can_id)
 
+
+        # um...
+        send_fault("SOFT_RESET")
 
         # main zorg loop:
         while True:

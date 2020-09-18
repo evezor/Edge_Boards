@@ -37,7 +37,7 @@ channels = [
 FAULT = [
         "HALT",
         "HARD_RESET",
-        "SOFT_RESET
+        "SOFT_RESET"
         ]
 
 NWK = [

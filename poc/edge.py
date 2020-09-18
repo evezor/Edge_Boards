@@ -119,7 +119,10 @@ class Edge(Board):
         if beer is not None:
 
             if beer.channel == "FAULT":
-                self.driver.halt()
+                if beer.header == "HALT":
+                    self.driver.halt()
+                if beer.header == "SOFT_RESET":
+                    self.driver.soft_reset()
 
             if beer.can_id == self.can_id:
 

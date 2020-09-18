@@ -1,12 +1,13 @@
 # driver.py
 # abstract driver class, real boards make it real.
 
+import machine
 
 class Driver:
 
     parameter_table = {}
 
-    def reset():
+    def soft_reset(self):
         machine.soft_reset()
 
     def init(self):

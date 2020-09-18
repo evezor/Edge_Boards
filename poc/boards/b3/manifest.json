@@ -19,10 +19,10 @@
 ],
 
 "outputs":[
-    "light_0_on",
-    "light_0_off",
-    "light_1_on",
-    "light_1_off",
+    "led_0_on",
+    "led_0_off",
+    "led_1_on",
+    "led_1_off",
     "led_0_dim"
 ]
 }

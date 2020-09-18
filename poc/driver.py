@@ -6,6 +6,9 @@ class Driver:
 
     parameter_table = {}
 
+    def reset():
+        machine.soft_reset()
+
     def init(self):
         pass
 

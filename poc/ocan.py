@@ -34,6 +34,12 @@ channels = [
         "DEBUG",
         ]
 
+FAULT = [
+        "HALT",
+        "HARD_RESET",
+        "SOFT_RESET
+        ]
+
 NWK = [
 "ZORG_IAM",
 "BOARD_IAM",
@@ -100,8 +106,11 @@ class OCan():
 
         ci = CanMessageId()
 
+        # this has got to go.  somewhere.
+        if channel_name == "FAULT":
+            hi = Header()
+            header = hi.pack( rfe=FAULT.index(header), random=random.getrandbits(14))
         if channel_name == "NWK":
-            # this has got to go.  somewhere.
             hi = Header()
             header = hi.pack( rfe=NWK.index(header), random=random.getrandbits(14))
 
@@ -142,7 +151,12 @@ class OCan():
             r2 = ci.unpack(can_id)
             channel_name = channels[ r2.channel ]
 
-            if channel_name == "NWK":
+            # TODO: this needs to go somewhere else
+            if channel_name == "FAULT":
+                hi = Header()
+                header = hi.unpack(r2.header)
+                header = FAULT[header.rfe]
+            elif channel_name == "NWK":
                 hi = Header()
                 header = hi.unpack( r2.header)
                 header = NWK[header.rfe]

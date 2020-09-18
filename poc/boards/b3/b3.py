@@ -5,9 +5,12 @@ import time
 import os
 import pyb
 
-from machine import Pin
+# from machine import Pin
+from pyb import Pin, Timer
 
 from driver import Driver
+
+
 
 BUTTON={
         0:"on",
@@ -27,15 +30,32 @@ class B3(Driver):
             Pin("D6", Pin.OUT),
             ]
 
+        # inputs
+        self.button_pins = [
+            Pin("D11", Pin.IN, Pin.PULL_UP),
+            Pin("D12", Pin.IN, Pin.PULL_UP),
+            ]
+
+        self.adc_pins = [
+            pyb.ADC('A0')
+            ]
+
+        # outputs:
         self.light_pins = [
             Pin("D5", Pin.OUT),
             Pin("D13", Pin.OUT),
             ]
 
-        self.button_pins = [
-            Pin("D11", Pin.IN, Pin.PULL_UP),
-            Pin("D12", Pin.IN, Pin.PULL_UP),
-            ]
+        # led5 = Pin('D5')
+        # tim = Timer(3, freq=1000)
+        # ch = tim.channel(2, Timer.PWM, pin=led5)
+
+        # c13 = tim.channel(2, Timer.PWM, pin=d13)
+        # ValueError: Pin(C1) doesn't have an af for Timer(3)
+
+        tim = Timer(3, freq=1000)
+        self.ch = tim.channel(2, Timer.PWM, pin=self.light_pins[0])
+        self.ch.pulse_width_percent(5)
 
 
     def wake_up_can(self):
@@ -72,6 +92,10 @@ class B3(Driver):
 
         v = BUTTON[self.button_pins[1].value()]
         self.parameter_table["button_1"]['new value'] = v
+
+        # 1 to 4096.. ish
+        v = self.adc_pins[0].read()
+        self.parameter_table["pot_0"]['new value'] = v
 
 
     def button_x_on(self, button_no):
@@ -110,6 +134,20 @@ class B3(Driver):
     def button_1_off(self):
         return self.button_x_off(1)
 
+    def pot_0(self):
+        """ did the pot change more than.... 10? """
+
+        parameter_name = "pot_0"
+
+        ov = self.parameter_table[parameter_name]['old value']
+        nv = self.parameter_table[parameter_name]['new value']
+
+        ret = abs(ov - nv) > 10
+
+        # print(ov,nv,ret)
+
+        return ret
+
 
     # outputs:
 
@@ -131,6 +169,13 @@ class B3(Driver):
     def light_1_off(self):
         self.light_oo(1, "off")
 
+    def led_0_dim(self):
 
+        parameter_name = "pot_0"
+        ov = self.parameter_table[parameter_name]['old value']
+
+        v = 100 * ov/4096
+
+        self.ch.pulse_width_percent(v)
 
 

@@ -5,20 +5,24 @@
 
 "parameters": {
     "button_0": {"old value": 1},
-    "button_1": {"old value": 1}
+    "button_1": {"old value": 1},
+    "pot_0": {"old value": 1}
+
 },
 
 "inputs":[
     "button_0_on",
     "button_0_off",
     "button_1_on",
-    "button_1_off"
+    "button_1_off",
+    "pot_0"
 ],
 
 "outputs":[
     "light_0_on",
     "light_0_off",
     "light_1_on",
-    "light_1_off"
+    "light_1_off",
+    "led_0_dim"
 ]
 }

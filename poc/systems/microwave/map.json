@@ -14,6 +14,22 @@
     "maps": [
         {
             "input":
+                { "board": "A", "function": "pot_0", "priority":"medium" },
+            "outputs": [
+                { "board": "B", "function": "light_0_on" }
+            ]
+        },
+        {
+            "input":
+                { "board": "B", "function": "button_0_on", "priority":"medium" },
+            "outputs": [
+                { "board": "A", "function": "led_0_dim" }
+            ]
+        },
+
+
+        {
+            "input":
                 { "board": "A", "function": "button_0_on", "priority":"medium" },
             "outputs": [
                 { "board": "A", "function": "light_0_on" },

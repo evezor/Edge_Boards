@@ -21,7 +21,7 @@
         },
         {
             "input":
-                { "board": "B", "function": "button_0_on", "priority":"medium" },
+                { "board": "B", "function": "pot_0", "priority":"medium" },
             "outputs": [
                 { "board": "A", "function": "led_0_dim" }
             ]

@@ -4,12 +4,12 @@
 import time
 import os
 import pyb
+import struct
 
 # from machine import Pin
 from pyb import Pin, Timer
 
 from driver import Driver
-
 
 
 BUTTON={
@@ -55,7 +55,7 @@ class B3(Driver):
 
         tim = Timer(3, freq=1000)
         self.ch = tim.channel(2, Timer.PWM, pin=self.led_pins[0])
-        self.ch.pulse_width_percent(5)
+        self.ch.pulse_width_percent(0)
 
 
     def wake_up_can(self):
@@ -94,8 +94,14 @@ class B3(Driver):
         self.parameter_table["button_1"]['new value'] = v
 
         # 1 to 4096.. ish
-        v = self.adc_pins[0].read()
-        self.parameter_table["pot_0"]['new value'] = v
+
+        ov = self.parameter_table["pot_0"]['old value']
+        nv = self.adc_pins[0].read()
+
+        if abs(ov - nv) > 10:
+            self.parameter_table["pot_0"]['new value'] = nv
+
+        return None
 
 
     def button_x_on(self, button_no):
@@ -106,7 +112,7 @@ class B3(Driver):
         ov = self.parameter_table[parameter_name]['old value']
         nv = self.parameter_table[parameter_name]['new value']
 
-        ret = (ov=="off" and nv=="on")
+        ret = self.truth_fairy(ov=="off" and nv=="on")
 
         return ret
 
@@ -118,7 +124,7 @@ class B3(Driver):
         ov = self.parameter_table[parameter_name]['old value']
         nv = self.parameter_table[parameter_name]['new value']
 
-        ret = (ov=="on" and nv=="off")
+        ret = self.truth_fairy(ov=="on" and nv=="off")
 
         return ret
 
@@ -142,9 +148,10 @@ class B3(Driver):
         ov = self.parameter_table[parameter_name]['old value']
         nv = self.parameter_table[parameter_name]['new value']
 
-        ret = abs(ov - nv) > 10
-
-        # print(ov,nv,ret)
+        if ov != nv:
+            ret = struct.pack("H",nv)
+        else:
+            ret = None
 
         return ret
 
@@ -157,24 +164,28 @@ class B3(Driver):
         v = 0 if oo == "off" else 1
         self.led_pins[led_no].value(v)
 
-    def led_0_on(self):
+    def led_0_on(self, message):
         self.led_oo(0, "on")
 
-    def led_0_off(self):
+    def led_0_off(self, message):
         self.led_oo(0, "off")
 
-    def led_1_on(self):
+    def led_1_on(self, message):
         self.led_oo(1, "on")
 
-    def led_1_off(self):
+    def led_1_off(self, message):
         self.led_oo(1, "off")
 
-    def led_0_dim(self):
+    def led_0_dim(self, message):
 
+        """
         parameter_name = "pot_0"
         ov = self.parameter_table[parameter_name]['old value']
-
         v = 100 * ov/4096
+        """
+        v = struct.unpack("H", message)[0]
+        print(v)
+        v = 100 * v/4096
 
         self.ch.pulse_width_percent(v)
 

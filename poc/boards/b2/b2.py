@@ -35,14 +35,14 @@ class B2(Driver):
         ov = self.parameter_table[parameter_name]['old value']
         nv = self.parameter_table[parameter_name]['new value']
 
-        ret = (ov=="running" and nv=="stop")
+        ret = self.truth_fairy(ov=="running" and nv=="stop")
 
         return ret
 
 
     # outputs:
 
-    def timer_start(self):
+    def timer_start(self, message):
         print(self.parameter_table)
         self.end_time = time.time() + self.parameter_table["cook time"]['old value']
         self.parameter_table["timer"]['old value'] = "running"

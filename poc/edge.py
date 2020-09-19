@@ -142,7 +142,7 @@ class Edge(Board):
                         function_name = output['function_name']
                         print(function_name)
                         function = getattr(self.driver, function_name)
-                        ret = function()
+                        ret = function(beer.message)
 
 
     def check_inputs(self):
@@ -150,10 +150,10 @@ class Edge(Board):
             function_name = input_['function']
             function = getattr(self.driver, function_name)
             ret = function()
-            if ret:
+            if ret is not None:
                 channel = input_['channel']
                 function_no = self.manifest['inputs'].index(function_name)
-                message = bytes()
+                message = ret
                 beer = self.ocan.send(
                         channel, self.can_id, header=function_no, message=message)
                 # process local outputs:

@@ -7,6 +7,11 @@ class Driver:
 
     parameter_table = {}
 
+    def truth_fairy(self, v):
+        # smash True/False into True/None
+        ret = b'' if v else None
+        return ret
+
     def soft_reset(self):
         machine.soft_reset()
 

@@ -1,5 +1,8 @@
 import json
 
+from collections import OrderedDict
+
+
 print("loading manifest...")
 manifest = json.load(open('manifest.json'))
 print(manifest)

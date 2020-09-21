@@ -5,11 +5,11 @@ import machine
 
 class Driver:
 
-    parameter_table = {}
+    parameters = {}
 
     def truth_fairy(self, v):
         # smash True/False into True/None
-        ret = b'' if v else None
+        ret = v if v else None
         return ret
 
     def soft_reset(self):
@@ -25,6 +25,5 @@ class Driver:
         pass
 
     def save_states(self):
-        for parameter_name in self.parameter_table:
-            self.parameter_table[parameter_name]['old value'] = \
-                self.parameter_table[parameter_name]['new value']
+        for parameter in self.parameters:
+            parameter['old value'] =  parameter['new value']

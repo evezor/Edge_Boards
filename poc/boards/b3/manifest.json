@@ -1,28 +1,29 @@
-{"model": "b3",
-"main": "edge",
-"driver": "B3",
-"init": "init",
+{
+    "model": "b3",
+    "main": "edge",
+    "driver": "B3",
+    "init": "init",
 
-"parameters": {
-    "button_0": {"old value": 1},
-    "button_1": {"old value": 1},
-    "pot_0": {"old value": 1}
-
-},
+"parameters": [
+    { "name": "button_0", "old value": 1 },
+    { "name": "button_1", "old value": 1 },
+    { "name": "pot_0",    "old value": 1 }
+],
 
 "inputs":[
-    "button_0_on",
-    "button_0_off",
-    "button_1_on",
-    "button_1_off",
-    "pot_0"
+    { "name": "button_0_on" },
+    { "name": "button_0_off" },
+    { "name": "button_1_on" } ,
+    { "name": "button_1_off" },
+    { "name": "pot_0", "range": {"low":0, "high": 4096} }
 ],
 
 "outputs":[
-    "led_0_on",
-    "led_0_off",
-    "led_1_on",
-    "led_1_off",
-    "led_0_dim"
+    { "name": "led_0_on" },
+    { "name": "led_0_off" },
+    { "name": "led_1_on" },
+    { "name": "led_1_off" },
+    { "name": "led_0_dim", "range": {"low":0, "high": 100 } }
 ]
+
 }

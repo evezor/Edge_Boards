@@ -4,16 +4,17 @@
     "driver": "B2",
     "init": "init",
 
-"inputs":[
-    "timer_end"
-    ],
+"parameters": [
+    { "name": "timer",     "old value": "stop" },
+    { "name": "cook time", "old value": 5 }
+],
 
-"outputs":[
-    "timer_start"
-    ],
+"inputs": [
+    { "name": "timer_end" }
+],
 
-"parameters": {
-    "timer": {"old value": "stop"},
-    "cook time": {"old value": 5}
-    }
+"outputs": [
+    { "name": "timer_start" }
+]
+
 }

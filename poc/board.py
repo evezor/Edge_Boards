@@ -32,10 +32,9 @@ class Board():
             print(module)
             driver = getattr( module, self.manifest['driver'] )()
 
-            driver.parameter_table = self.manifest['parameters']
-            for parameter_name in driver.parameter_table:
-                driver.parameter_table[parameter_name]['new value'] = \
-                    driver.parameter_table[parameter_name]['old value']
+            driver.parameters = self.manifest['parameters']
+            for parameter in driver.parameters:
+                parameter['new value'] = parameter['old value']
 
             print(driver)
             if "init" in self.manifest:

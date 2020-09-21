@@ -2,6 +2,7 @@
 
 import json
 import random
+import struct
 import time
 
 from collections import OrderedDict
@@ -104,26 +105,30 @@ class Zorg(Board):
                 pulse_log(can_id)
 
             for input_ in mad_map['inputs']:
-                print(input_)
-                # {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}
-                message = bytes((
+                f,l = "BB", [
                     channels.index(input_['channel']),
                     input_['function_no']
-                    ))
+                    ]
+                if "range" in input_:
+                    f += "HH"
+                    l.extend( (input_['range']['low'], input_['range']['high']) )
+
+                message = struct.pack(f,*l)
                 self.ocan.send("NWK", can_id, "SET_INPUT", message)
 
             for output in mad_map['outputs']:
                 print(output)
-                # {'source': {'function_no': 0, 'channel': 'FM', 'board_name': 'A'}, 'function_no': 2}
-                # {'source': {'function_no': {1}, 'channel': {0}, 'board_name': {2}}, 'function_no': {3}}
-                # chan, src func, src board, dst func
                 src_board_chan_id = self.mapo[output['source']['board_name']]['can_id']
-                message = bytes((
+                f,l = "BBBB", [
                     channels.index(output['source']['channel']),
                     output['source']['function_no'],
                     src_board_chan_id,
                     output['function_no']
-                    ))
+                    ]
+                if "range" in output:
+                    f += "HH"
+                    l.extend((output['range']['low'], output['range']['high']))
+                message = struct.pack(f,*l)
                 self.ocan.send("NWK", can_id, "SET_OUTPUT", message)
 
             for parma in mad_map['parameters']:
@@ -161,8 +166,8 @@ class Zorg(Board):
             elif beer.header=="HEARTBEAT":
                 pulse_log(beer.can_id)
 
-
         # um...
+        # reboot all the Edges
         send_fault("SOFT_RESET")
 
         # main zorg loop:

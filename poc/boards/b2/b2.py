@@ -24,7 +24,8 @@ class B2(Driver):
     def read_states(self):
         if self.end_time is not None:
             if time.time() >= self.end_time:
-                self.parameter_table["timer"]['new value'] = "stop"
+                parameter = next(d for d in self.parameters if d["name"] == "timer")
+                parameter['new value'] = "stop"
                 self.end_time = None
 
     def timer_end(self):
@@ -32,8 +33,9 @@ class B2(Driver):
 
         parameter_name = "timer"
 
-        ov = self.parameter_table[parameter_name]['old value']
-        nv = self.parameter_table[parameter_name]['new value']
+        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
+        ov = parameter['old value']
+        nv = parameter['new value']
 
         ret = self.truth_fairy(ov=="running" and nv=="stop")
 
@@ -42,11 +44,16 @@ class B2(Driver):
 
     # outputs:
 
-    def timer_start(self, message):
-        print(self.parameter_table)
-        self.end_time = time.time() + self.parameter_table["cook time"]['old value']
-        self.parameter_table["timer"]['old value'] = "running"
-        self.parameter_table["timer"]['new value'] = "running"
+    def timer_start(self):
+
+        parameter_name="cook time"
+        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
+        self.end_time = time.time() + parameter['old value']
+
+        parameter_name="timer"
+        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
+        parameter['old value'] = "running"
+        parameter['new value'] = "running"
 
 
 if __name__ == '__main__':

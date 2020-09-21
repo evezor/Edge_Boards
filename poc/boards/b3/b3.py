@@ -46,13 +46,6 @@ class B3(Driver):
             Pin("D13", Pin.OUT),
             ]
 
-        # led5 = Pin('D5')
-        # tim = Timer(3, freq=1000)
-        # ch = tim.channel(2, Timer.PWM, pin=led5)
-
-        # c13 = tim.channel(2, Timer.PWM, pin=d13)
-        # ValueError: Pin(C1) doesn't have an af for Timer(3)
-
         tim = Timer(3, freq=1000)
         self.ch = tim.channel(2, Timer.PWM, pin=self.led_pins[0])
         self.ch.pulse_width_percent(0)
@@ -88,18 +81,21 @@ class B3(Driver):
 
     def read_states(self):
         v = BUTTON[self.button_pins[0].value()]
-        self.parameter_table["button_0"]['new value'] = v
+        parameter = next(d for d in self.parameters if d["name"] == "button_0")
+        parameter['new value'] = v
 
         v = BUTTON[self.button_pins[1].value()]
-        self.parameter_table["button_1"]['new value'] = v
+        parameter = next(d for d in self.parameters if d["name"] == "button_1")
+        parameter['new value'] = v
 
         # 1 to 4096.. ish
 
-        ov = self.parameter_table["pot_0"]['old value']
+        parameter = next(d for d in self.parameters if d["name"] == "pot_0")
+        ov = parameter['old value']
         nv = self.adc_pins[0].read()
 
         if abs(ov - nv) > 10:
-            self.parameter_table["pot_0"]['new value'] = nv
+            parameter['new value'] = nv
 
         return None
 
@@ -109,8 +105,9 @@ class B3(Driver):
 
         parameter_name = "button_{}".format(button_no)
 
-        ov = self.parameter_table[parameter_name]['old value']
-        nv = self.parameter_table[parameter_name]['new value']
+        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
+        ov = parameter['old value']
+        nv = parameter['new value']
 
         ret = self.truth_fairy(ov=="off" and nv=="on")
 
@@ -121,8 +118,9 @@ class B3(Driver):
 
         parameter_name = "button_{}".format(button_no)
 
-        ov = self.parameter_table[parameter_name]['old value']
-        nv = self.parameter_table[parameter_name]['new value']
+        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
+        ov = parameter['old value']
+        nv = parameter['new value']
 
         ret = self.truth_fairy(ov=="on" and nv=="off")
 
@@ -145,11 +143,12 @@ class B3(Driver):
 
         parameter_name = "pot_0"
 
-        ov = self.parameter_table[parameter_name]['old value']
-        nv = self.parameter_table[parameter_name]['new value']
+        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
+        ov = parameter['old value']
+        nv = parameter['new value']
 
         if ov != nv:
-            ret = struct.pack("H",nv)
+            ret = nv
         else:
             ret = None
 
@@ -164,29 +163,19 @@ class B3(Driver):
         v = 0 if oo == "off" else 1
         self.led_pins[led_no].value(v)
 
-    def led_0_on(self, message):
+    def led_0_on(self):
         self.led_oo(0, "on")
 
-    def led_0_off(self, message):
+    def led_0_off(self):
         self.led_oo(0, "off")
 
-    def led_1_on(self, message):
+    def led_1_on(self):
         self.led_oo(1, "on")
 
-    def led_1_off(self, message):
+    def led_1_off(self):
         self.led_oo(1, "off")
 
-    def led_0_dim(self, message):
-
-        """
-        parameter_name = "pot_0"
-        ov = self.parameter_table[parameter_name]['old value']
-        v = 100 * ov/4096
-        """
-        v = struct.unpack("H", message)[0]
-        print(v)
-        v = 100 * v/4096
-
-        self.ch.pulse_width_percent(v)
+    def led_0_dim(self, val):
+        self.ch.pulse_width_percent(val)
 
 

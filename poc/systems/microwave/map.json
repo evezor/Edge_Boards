@@ -7,7 +7,7 @@
             "model": "b3"
         },
         "C": {"model": "b2",
-            "heart": {"rate":1}
+            "xheart": {"rate":1}
         }
     },
 
@@ -16,12 +16,13 @@
             "input":
                 { "board": "A", "function": "pot_0", "priority":"medium" },
             "outputs": [
-                { "board": "B", "function": "led_0_on" }
+                { "board": "B", "function": "led_0_dim" }
             ]
         },
         {
             "input":
-                { "board": "B", "function": "pot_0", "priority":"medium" },
+                { "board": "B", "function": "pot_0" ,
+                    "range": {"low": 4096, "high": 0}},
             "outputs": [
                 { "board": "A", "function": "led_0_dim" }
             ]

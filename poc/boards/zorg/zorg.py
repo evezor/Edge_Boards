@@ -47,16 +47,29 @@ class Zorg(Board):
 
         def assign_can_id(mac):
             # Edge asks for can_id
+
             bigmac = ':'.join( "{:02x}".format(i) for i in mac )
             print("bigmac: {}".format(bigmac))
 
-            if bigmac not in self.macs:
-                self.macs[bigmac] = {}
-            can_id = list(self.macs.keys()).index(bigmac)
-            self.ocan.send("NWK", can_id, "ZORG_OFFER", mac)
+            if bigmac not in self.commission:
+                # new board
+                print("{} not in commission".format(bigmac))
+            else:
+                board_name = self.commission[bigmac]
 
-            board_name = self.commission[bigmac]
-            self.mapo[board_name]['can_id'] = can_id
+                if board_name not in self.mapo:
+                    # Unused board on the wire
+                    print("'{}' not in mapo: {}".format(
+                        board_name, self.mapo.keys()))
+
+                else:
+
+                    if bigmac not in self.macs:
+                        self.macs[bigmac] = {}
+                    can_id = list(self.macs.keys()).index(bigmac)
+
+                    self.mapo[board_name]['can_id'] = can_id
+                    self.ocan.send("NWK", can_id, "ZORG_OFFER", mac)
 
             return
 
@@ -81,8 +94,11 @@ class Zorg(Board):
 
         def all_awake():
             # Are all of the Edges awake?
-            sleeping = [self.commission[k]
-                    for k in self.commission if k not in self.macs]
+            # self.mapo[board_name]['can_id'] = can_id
+            sleeping = [ board_name
+                    for board_name in self.mapo
+                    if "can_id" not in self.mapo[board_name]
+                    ]
             print(sleeping)
 
             return len(sleeping) == 0

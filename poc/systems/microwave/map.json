@@ -14,7 +14,7 @@
     "maps": [
         {
             "input":
-                { "board": "A", "function": "pot_0", "priority":"medium" },
+                { "board": "A", "function": "pot_0" },
             "outputs": [
                 { "board": "B", "function": "led_0_dim" }
             ]
@@ -22,10 +22,10 @@
         {
             "input":
                 { "board": "B", "function": "pot_0" ,
-                    "range": {"low": 4096, "high": 0}},
+                    "range": {"low": 4076, "high": 10}},
             "outputs": [
                 { "board": "A", "function": "led_0_dim",
-                    "range": {"low": 30, "high": 40}}
+                    "range": {"low": 1, "high": 20}}
             ]
         },
 

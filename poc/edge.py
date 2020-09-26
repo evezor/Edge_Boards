@@ -159,7 +159,6 @@ class Edge(Board):
                             and output['source']['can_id'] == beer.can_id:
 
                         function_name = output['function_name']
-                        print(function_name)
                         function = getattr(self.driver, function_name)
                         if 'range' in output:
 
@@ -168,8 +167,8 @@ class Edge(Board):
                             low_output = output['range']['low']
                             high_output = output['range']['high']
 
-                            print(function_name)
-                            print( low_input, high_input, low_output, high_output)
+                            print( val, low_input, high_input,
+                                    low_output, high_output)
 
                             val = (high_output - low_output) / (high_input - low_input) *  (val - low_input) + low_output
 

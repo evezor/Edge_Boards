@@ -99,7 +99,7 @@ class Zorg(Board):
                     for board_name in self.mapo
                     if "can_id" not in self.mapo[board_name]
                     ]
-            print(sleeping)
+            print("sleeping: {}".format(sleeping))
 
             return len(sleeping) == 0
 

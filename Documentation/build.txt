@@ -6,32 +6,27 @@
 
 # https://learn.adafruit.com/building-circuitpython
 
-sudo adduser juser dialout
+sudo adduser $USER dialout
 
-sudo apt install gettext gcc-arm-none-eabi libnewlib-arm-none-eabi
-sudo apt install build-essential libffi-dev pkg-config
-sudo apt install gettext
-
-git clone https://github.com/micropython/micropython
-git clone --recurse-submodules https://github.com/adafruit/circuitpython
-
-# https://github.com/micropython/micropython#the-micropython-cross-compiler-mpy-cross
-
-# https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
-
-wget https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
-
-tar xvf gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2
+sudo apt install gettext gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential libffi-dev pkg-config
 
 vim ~/.bashrc
 
-export PATH=$PATH:~/gcc-arm-none-eabi-9-2020-q2-update/bin
-export BOARD=ADAFRUIT_F405_EXPRESS
+# export BOARD=ADAFRUIT_F405_EXPRESS
+export BOARD_DIR=~/ev/Edge_Boards/micropython/EVEZOR_F405V1
+export BOARD=EVEZOR_F405V1
 
-cd ports/stm32
+# log out and back in again
 
+git clone --recurse-submodules https://github.com/micropython/micropython
+git clone --recurse-submodules https://github.com/adafruit/circuitpython
+
+cd micropython
+
+cd mpy-cross
 make
-make flash
-make deploy
 
-CP: storage.erase_filesystem()
+cd ../ports/stm32
+make
+# make flash
+make deploy

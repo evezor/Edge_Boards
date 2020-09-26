@@ -7,7 +7,7 @@ board_c=/media/carl/PYBFLASH2
 
 cp -u main.py bundle.py ocan.py board.py $board_zorg
 for board in $board_a $board_b $board_c; do
-    cp -u main.py bundle.py ocan.py board.py edge.py driver.py $board
+    cp -u main.py bundle.py ocan.py board.py edge.py boards/driver.py $board
 done
 
 cp -u boards/zorg/* $board_zorg

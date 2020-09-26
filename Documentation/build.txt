@@ -2,8 +2,6 @@
 
 # for building MP and CP
 
-# install build deps n tool chain n...
-
 # https://learn.adafruit.com/building-circuitpython
 
 sudo adduser $USER dialout

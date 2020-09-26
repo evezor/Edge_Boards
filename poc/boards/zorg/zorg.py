@@ -54,6 +54,8 @@ class Zorg(Board):
             if bigmac not in self.commission:
                 # new board
                 print("{} not in commission".format(bigmac))
+                ret = None
+
             else:
                 board_name = self.commission[bigmac]
 
@@ -61,6 +63,7 @@ class Zorg(Board):
                     # Unused board on the wire
                     print("'{}' not in mapo: {}".format(
                         board_name, self.mapo.keys()))
+                    ret = None
 
                 else:
 
@@ -71,7 +74,9 @@ class Zorg(Board):
                     self.mapo[board_name]['can_id'] = can_id
                     self.ocan.send("NWK", can_id, "ZORG_OFFER", mac)
 
-            return
+                    ret = board_name
+
+            return ret
 
         def send_fault(fault_type):
             self.ocan.send("FAULT", ZORG_CANID, header=fault_type)
@@ -173,11 +178,16 @@ class Zorg(Board):
 
                 elif beer.header=="BOARD_DISCOVER":
                     # Hello board, have some things
-                    assign_can_id(beer.message)
+                    board_name = assign_can_id(beer.message)
                     # TODO: I don't like this here:
-                    if all_awake():
-                        maps_send_all()
-                        self.system_state = RUNNING
+                    if board_name is not None:
+                        if self.system_state == RUNNING:
+                            maps_send_board(board_name)
+                        else:
+                            if all_awake():
+                                maps_send_all()
+                                self.system_state = RUNNING
+
 
             elif beer.header=="HEARTBEAT":
                 pulse_log(beer.can_id)

@@ -10,15 +10,6 @@ class B2(Driver):
 
     end_time = None
 
-    def halt(self):
-        machine.reset()
-
-    def mkfs(self):
-        flash = pyb.Flash()
-        os.umount('/flash')
-        os.VfsFat(flash)
-        os.mount(flash, '/flash')
-
     # inputs:
 
     def read_states(self):

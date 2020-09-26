@@ -58,25 +58,6 @@ class B3(Driver):
         self.setup_pins()
         self.wake_up_can()
 
-    # stops:
-
-    def halt(self):
-        print("halt.")
-        while True:
-            self.led_0_on()
-            time.sleep(.1)
-            self.led_0_off()
-            time.sleep(.1)
-
-    # dangers:
-
-    def mkfs(self):
-        flash = pyb.Flash()
-        os.umount('/flash')
-        os.VfsFat(flash)
-        os.mount(flash, '/flash')
-
-
     # inputs:
 
     def read_states(self):

@@ -31,10 +31,11 @@ class B3(Driver):
             ]
 
         # inputs
-        self.button_pins = [
-            Pin("D11", Pin.IN, Pin.PULL_UP),
-            Pin("D12", Pin.IN, Pin.PULL_UP),
-            ]
+        button_pins = ("d11", "d12")
+
+        for pin in button_pins:
+            self.button_pins.append( Pin(pin, Pin.IN, Pin.PULL_UP)
+
 
         self.adc_pins = [
             pyb.ADC('A0')

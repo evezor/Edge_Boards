@@ -1,5 +1,7 @@
 set -ex
 
+# sudo mkfs.vfat -n PYBFLASH /dev/sdc1
+
 board_zorg=/media/carl/PYBFLASH
 board_a=/media/carl/PYBFLASH1
 board_b=/media/carl/PYBFLASH3

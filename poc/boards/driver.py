@@ -19,6 +19,9 @@ class Driver:
             self.led_0_off()
             time.sleep(.1)
 
+    def soft_reset(self):
+        machine.soft_reset()
+
     # dangers:
 
     def mkfs(self):
@@ -27,24 +30,21 @@ class Driver:
         os.umount('/flash')
         os.VfsFat(flash)
         os.mount(flash, '/flash')
-        print( os.listdir() )
+        # print( os.listdir() )
+        # for  CP: storage.erase_filesystem()
 
-
+    # Handy things:
 
     def truth_fairy(self, v):
         # smash True/False into True/None
         ret = v if v else None
         return ret
 
-    def soft_reset(self):
-        machine.soft_reset()
-
+    # Board things
     def init(self):
         pass
 
-    def halt():
-        pass
-
+    # Iris things
     def read_states(self):
         pass
 

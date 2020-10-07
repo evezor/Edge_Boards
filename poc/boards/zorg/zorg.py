@@ -59,10 +59,10 @@ class Zorg(Board):
             else:
                 board_name = self.commission[bigmac]
 
-                if board_name not in self.mapo:
+                if board_name not in self.mapo['boards']:
                     # Unused board on the wire
                     print("'{}' not in mapo: {}".format(
-                        board_name, self.mapo.keys()))
+                        board_name, self.mapo['boards'].keys()))
                     ret = None
 
                 else:
@@ -71,7 +71,7 @@ class Zorg(Board):
                         self.macs[bigmac] = {}
                     can_id = list(self.macs.keys()).index(bigmac)
 
-                    self.mapo[board_name]['can_id'] = can_id
+                    self.mapo['boards'][board_name]['can_id'] = can_id
                     self.ocan.send("NWK", can_id, "ZORG_OFFER", mac)
 
                     ret = board_name
@@ -85,11 +85,11 @@ class Zorg(Board):
             # logs the heartbeat from the board
             mac = list(self.macs.keys())[can_id]
             board_name = self.commission[mac]
-            self.mapo[board_name]['heart']['pulse'] = time.time()
+            self.mapo['boards'][board_name]['heart']['pulse'] = time.time()
 
         def ck_hearts():
-            for board_name in self.mapo:
-                board = self.mapo[board_name]
+            for board_name in self.mapo['boards']:
+                board = self.mapo['boards'][board_name]
                 if 'heart' in board:
                     if board['heart']['pulse'] < time.time()-2:
                         print(board_name, board['heart'])
@@ -101,8 +101,8 @@ class Zorg(Board):
             # Are all of the Edges awake?
             # self.mapo[board_name]['can_id'] = can_id
             sleeping = [ board_name
-                    for board_name in self.mapo
-                    if "can_id" not in self.mapo[board_name]
+                    for board_name in self.mapo['boards']
+                    if "can_id" not in self.mapo['boards'][board_name]
                     ]
             print("sleeping: {}".format(sleeping))
 
@@ -116,7 +116,7 @@ class Zorg(Board):
             # it would be nice if the pack/unpack code was in the same place.
 
             print("sending maps to {}".format(board_name))
-            mad_map = self.mapo[board_name]
+            mad_map = self.mapo['boards'][board_name]
             can_id = mad_map['can_id'] # target of these messages
 
             if 'heart' in mad_map:
@@ -139,7 +139,7 @@ class Zorg(Board):
 
             for output in mad_map['outputs']:
                 print(output)
-                src_board_chan_id = self.mapo[output['source']['board_name']]['can_id']
+                src_board_chan_id = self.mapo['boards'][output['source']['board_name']]['can_id']
                 f,l = "BBBB", [
                     channels.index(output['source']['channel']),
                     output['source']['function_no'],
@@ -161,10 +161,11 @@ class Zorg(Board):
                 self.ocan.send("NWK", can_id, "SET_PARMA", message)
 
             self.ocan.send("NWK", can_id, "RESUME")
+            self.ocan.send("NWK", can_id, "SAVE_ME")
 
         def maps_send_all():
 
-            for board_name in self.mapo:
+            for board_name in self.mapo['boards']:
                 maps_send_board(board_name)
 
         def nwk(beer):

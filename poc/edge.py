@@ -1,6 +1,7 @@
 # board2.py
 # random stuff to run on the other board
 
+import json
 import machine
 import time
 import struct
@@ -10,6 +11,7 @@ from board import Board
 
 class Edge(Board):
 
+    map_version = None
     inputs = []
     outputs = []
 
@@ -118,6 +120,15 @@ class Edge(Board):
                         'rate': list(beer.message)[0],
                         'time': time.time(),
                         }
+
+            elif beer.header=='SAVE_ME':
+                sotwca = {
+                        'map_version': self.map_version,
+                        'inputs': self.inputs,
+                        'outputs': self.outputs,
+                        }
+                json.dump(sotwca, open('state.json', 'w'))
+
 
             elif beer.header=='SET_PARMA':
                 # this doesn't look like it does anything useful?

@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "boards": {
         "A": {"model": "b3"},
         "B": {"model": "b3"},

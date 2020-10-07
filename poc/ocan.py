@@ -52,6 +52,7 @@ NWK = [
 "SET_PARMA",
 "HEART_RATE",
 "HEARTBEAT",
+"SAVE_ME",
 ]
 
 BeerCan = namedtuple('BeerCan', [

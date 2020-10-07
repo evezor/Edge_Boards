@@ -22,6 +22,10 @@ def doit(args):
 
     map_name = os.path.join( args.system_dir, args.name, "map.json")
     map_max = json.load(open(map_name))
+
+    mapo['version'] = map_max['version']
+
+    mapo['boards'] = {}
     boards = map_max['boards']
 
     # pull in the maifests:
@@ -33,7 +37,7 @@ def doit(args):
         manifest = json.load(open(manifest_name))
         boards[key]['manifest'] = manifest
 
-        mapo[key] = {
+        mapo['boards'][key] = {
                 'inputs': [],
                 'outputs': [],
                 'parameters': []
@@ -68,7 +72,7 @@ def doit(args):
         elif "range" in  board['manifest']['inputs'][function_no]:
             source['range'] = board['manifest']['inputs'][function_no]['range']
 
-        mapo[board_name]['inputs'].append(copy(source))
+        mapo['boards'][board_name]['inputs'].append(copy(source))
 
         source['board_name']=board_name
 
@@ -93,7 +97,7 @@ def doit(args):
             elif "range" in  board['manifest']['outputs'][function_no]:
                 o['range'] = board['manifest']['outputs'][function_no]['range']
 
-            mapo[board_name]['outputs'].append(o)
+            mapo['boards'][board_name]['outputs'].append(o)
 
     pprint(map_max)
     print()

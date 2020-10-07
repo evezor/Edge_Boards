@@ -28,3 +28,5 @@ cd ../ports/stm32
 make
 # make flash
 make deploy
+
+# CP 5.3.1  dfu-util -a 0 --dfuse-address 0x08000000 -D build-feather_stm32f405_express/firmware.bin

@@ -12,6 +12,7 @@ from board import Board
 class Edge(Board):
 
     map_version = None
+    can_id = None
     inputs = []
     outputs = []
 
@@ -22,48 +23,64 @@ class Edge(Board):
     def boot(self):
 
         print("booting...")
-        print("state 0")
 
         # >>> binascii.unhexlify('ff0000ff')
         # b'\xff\x00\x00\xff'
         # mac = b'\xff\x00\x00\xff'
         mac = bytes(list(machine.unique_id())[::2])
 
-        print("state 1")
+        try:
+            state = json.load(open('state.json'))
+
+            self.map_version = state['map_version']
+            self.can_id = state['can_id']
+            self.inputs = state['inputs']
+            self.outputs = state['outputs']
+
+            self.pause = False
+
+            print("state loaded:", self.version, self.can_id,
+                    len(self.inputs), len(self.outputs) )
+
+        except:
+            pass
+
         # hello zorg, I am here
         self.ocan.send("NWK", BOARD_NO_ID, "BOARD_IAM", b'iam bord')
 
-        # wait for Zorg to be awwake
-        beer = None
-        while beer is None:
-            beer = self.ocan.recieve(0, timeout=5000)
-            if beer is not None \
-                    and beer.can_id == ZORG_CANID \
-                    and beer.header == "ZORG_IAM":
-                break
-            else:
-                beer=None
+        if self.can_id is None:
 
-        print("state 2")
-        # Zorg awake, tell zorg mac:
-        self.ocan.send("NWK", BOARD_NO_ID, "BOARD_DISCOVER", mac )
-
-        print("state 3")
-        # wait for Zorg to assign a can_id
-        can_id = None
-        while can_id is None:
-            beer = self.ocan.recieve(0, timeout=1000)
-            if beer is None:
-                continue
-
-            if beer.channel=='NWK' \
-                and beer.header == "ZORG_OFFER" \
-                and beer.message == mac:
-                    can_id = beer.can_id
+            # wait for Zorg to be awwake
+            beer = None
+            while beer is None:
+                beer = self.ocan.recieve(0, timeout=5000)
+                if beer is not None \
+                        and beer.can_id == ZORG_CANID \
+                        and beer.header == "ZORG_IAM":
                     break
+                else:
+                    beer=None
 
-        print("booted! can_id:{}".format(can_id))
-        self.can_id = can_id
+            # Zorg awake, tell zorg mac:
+            self.ocan.send("NWK", BOARD_NO_ID, "BOARD_DISCOVER", mac )
+
+            # wait for Zorg to assign a can_id
+            while self.can_id is None:
+                beer = self.ocan.recieve(0, timeout=1000)
+                if beer is None:
+                    continue
+
+                if beer.channel=='NWK' \
+                    and beer.header == "ZORG_OFFER" \
+                    and beer.message == mac:
+                        self.can_id = beer.can_id
+                        break
+
+        else:
+            self.ocan.send("NWK", self.can_id, "VERSION",
+                    bytes([self.map_version]))
+
+        print("booted! can_id:{}".format(self.can_id))
 
     def heartbeat(self):
         if self.heart is not None:
@@ -75,7 +92,18 @@ class Edge(Board):
 
         def nwk(beer):
 
-            if beer.header=='SET_INPUT':
+            if beer.header=='PAUSE':
+                self.pause = True
+
+            elif beer.header=='CLEAR_MAPS':
+                self.inputs=[]
+                self.outputs=[]
+                self.parameters=[]
+
+            elif beer.header=='VERSION':
+                self.map_version = list(beer.message)[0]
+
+            elif beer.header=='SET_INPUT':
                 l = list(beer.message)
                 channel, function_no = l[:2]
                 function_name = self.manifest['inputs'][function_no]['name']
@@ -122,21 +150,20 @@ class Edge(Board):
                         }
 
             elif beer.header=='SAVE_ME':
+                if self.map_version is None:
+                    raise
                 sotwca = {
                         'map_version': self.map_version,
+                        'can_id': self.can_id,
                         'inputs': self.inputs,
                         'outputs': self.outputs,
                         }
                 json.dump(sotwca, open('state.json', 'w'))
 
-
             elif beer.header=='SET_PARMA':
-                # this doesn't look like it does anything useful?
                 parma_no, value = list(beer.message)
                 parma_name = self.driver.parameters[parma_no]['name']
-
-            elif beer.header=='PAUSE':
-                self.pause = True
+                self.parameters[parma_name] = value
 
             elif beer.header=='RESUME':
                 self.pause = False
@@ -181,9 +208,14 @@ class Edge(Board):
                             print( val, low_input, high_input,
                                     low_output, high_output)
 
-                            val = (high_output - low_output) / (high_input - low_input) *  (val - low_input) + low_output
+                            # clamp values outside the range?
+                            # val = max(low_input, min(val, high_input))
 
-                            ret = function(val)
+                            y = (high_output - low_output) / (high_input - low_input) *  (val - low_input) + low_output
+
+                            print(y)
+
+                            ret = function(y)
                         else:
                             ret = function()
 

@@ -32,11 +32,11 @@ class Zorg(Board):
 
         self.system_state = BOOTING
 
-        self.macs = OrderedDict()
-        self.macs['zorg'] = {'can_id': ZORG_CANID} # maybe this and that go in ocan or bits
-
         self.mapo = json.load(open('mapo.json'))
         self.commission = json.load(open('commission.json'))
+
+        self.macs = OrderedDict()
+        self.macs['zorg'] = {'can_id': ZORG_CANID} # maybe this and that go in ocan or bits
 
         print("zorg wakes up")
         self.iam_zorg()
@@ -87,6 +87,17 @@ class Zorg(Board):
             board_name = self.commission[mac]
             self.mapo['boards'][board_name]['heart']['pulse'] = time.time()
 
+        def ck_version(can_id, version):
+            # A board told us its map version,
+            # check to see if it is current
+            # update the board if it isn't
+            if version == self.mapo['version']:
+                self.ocan.send("NWK", can_id, "RESUME")
+            else:
+                mac = list(self.macs.keys())[can_id]
+                board_name = self.commission[mac]
+                maps_send_board(board_name)
+
         def ck_hearts():
             for board_name in self.mapo['boards']:
                 board = self.mapo['boards'][board_name]
@@ -116,13 +127,20 @@ class Zorg(Board):
             # it would be nice if the pack/unpack code was in the same place.
 
             print("sending maps to {}".format(board_name))
+
             mad_map = self.mapo['boards'][board_name]
             can_id = mad_map['can_id'] # target of these messages
 
+            self.ocan.send("NWK", can_id, "PAUSE")
+            self.ocan.send("NWK", can_id, "CLEAR_MAPS")
+
+            self.ocan.send("NWK", can_id, "VERSION",
+                    bytes([self.mapo['version']]))
+
             if 'heart' in mad_map:
                 # this looks a lot like a parameter
-                message = bytes([mad_map['heart']['rate']])
-                self.ocan.send("NWK", can_id, "HEART_RATE", message)
+                self.ocan.send("NWK", can_id, "HEART_RATE",
+                        bytes([mad_map['heart']['rate']]))
                 pulse_log(can_id)
 
             for input_ in mad_map['inputs']:
@@ -193,8 +211,20 @@ class Zorg(Board):
             elif beer.header=="HEARTBEAT":
                 pulse_log(beer.can_id)
 
+            elif beer.header=="VERSION":
+                version = beer.message[0]
+                ck_version(beer.can_id, version)
+
+
+        # load up 'dynamic' can_id lists
+        for mac in self.commission:
+            mac_bytes = bytes([ int(h,16) for h in mac.split(":")])
+            board_name = assign_can_id(mac_bytes)
+
+
         # um...
         # reboot all the Edges
+        # send_fault("HARD_RESET")
         send_fault("SOFT_RESET")
 
         # main zorg loop:

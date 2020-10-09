@@ -45,14 +45,16 @@ NWK = [
 "BOARD_IAM",
 "BOARD_DISCOVER",
 "ZORG_OFFER",
+"VERSION",
 "PAUSE",
 "RESUME",
+"CLEAR_MAPS",
 "SET_INPUT",
 "SET_OUTPUT",
 "SET_PARMA",
+"SAVE_ME",
 "HEART_RATE",
 "HEARTBEAT",
-"SAVE_ME",
 ]
 
 BeerCan = namedtuple('BeerCan', [

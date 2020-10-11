@@ -5,9 +5,14 @@ import machine
 import os
 import pyb
 
+from pyb import Pin, Timer
+
 class Driver:
 
-    parameters = {}
+    parameters = []
+
+    button_pins = []
+    led_pins = []
 
     # stops:
 
@@ -41,6 +46,11 @@ class Driver:
         return ret
 
     # Board things
+
+    def wake_up_can(self):
+        can_chip_pin = Pin("D6", Pin.OUT)
+        can_chip_pin.value(0)
+
     def init(self):
         pass
 

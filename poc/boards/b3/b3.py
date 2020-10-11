@@ -19,16 +19,7 @@ BUTTON={
 
 class B3(Driver):
 
-    can_chip_pins = []
-    led_pins = []
-    button_pins = []
-
     def setup_pins(self):
-
-        # CANbus chip
-        self.can_chip_pins = [
-            Pin("D6", Pin.OUT),
-            ]
 
         # inputs
         button_pins = ("D11", "D12")
@@ -50,9 +41,6 @@ class B3(Driver):
         self.ch = tim.channel(2, Timer.PWM, pin=self.led_pins[0])
         self.ch.pulse_width_percent(0)
 
-
-    def wake_up_can(self):
-        self.can_chip_pins[0].value(0)
 
     def init(self):
         self.setup_pins()

@@ -13,6 +13,7 @@ class Edge(Board):
 
     map_version = None
     can_id = None
+
     inputs = []
     outputs = []
 
@@ -30,20 +31,26 @@ class Edge(Board):
         mac = bytes(list(machine.unique_id())[::2])
 
         try:
+
+            print( "trying to restore state...")
+
             state = json.load(open('state.json'))
 
             self.map_version = state['map_version']
             self.can_id = state['can_id']
+
             self.inputs = state['inputs']
             self.outputs = state['outputs']
 
+            self.driver.parameters = state['parameters']
+
             self.pause = False
 
-            print("state loaded:", self.version, self.can_id,
-                    len(self.inputs), len(self.outputs) )
+            print("state loaded. ver: {}  can_id: {}".format(
+                self.map_version, self.can_id) )
 
-        except:
-            pass
+        except Exception as e:
+            print("restore state failed:", e)
 
         # hello zorg, I am here
         self.ocan.send("NWK", BOARD_NO_ID, "BOARD_IAM", b'iam bord')
@@ -98,7 +105,6 @@ class Edge(Board):
             elif beer.header=='CLEAR_MAPS':
                 self.inputs=[]
                 self.outputs=[]
-                self.parameters=[]
 
             elif beer.header=='VERSION':
                 self.map_version = list(beer.message)[0]
@@ -157,13 +163,14 @@ class Edge(Board):
                         'can_id': self.can_id,
                         'inputs': self.inputs,
                         'outputs': self.outputs,
+                        'parameters': self.driver.parameters,
                         }
                 json.dump(sotwca, open('state.json', 'w'))
 
             elif beer.header=='SET_PARMA':
                 parma_no, value = list(beer.message)
                 parma_name = self.driver.parameters[parma_no]['name']
-                self.parameters[parma_name] = value
+                self.driver.parameters[parma_name] = value
 
             elif beer.header=='RESUME':
                 self.pause = False

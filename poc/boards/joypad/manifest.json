@@ -1,13 +1,306 @@
-button_pins = ["E0", "E1", "E2", "D1", "D0", "E3", "E5", "E6", "D5", "E8", "E11", "E13", "E15"]
-button_labels = ["JOY_SW", "5WAY_UP", "5WAY_DOWN", "5WAY_PUSH", "5WAY_LEFT", "START", "SELECT", "RED_BUT", "GRN_BUT", "BLU_BUT", "YEL_BUT"]
-led_pins = ["E9", "E10", "E12", "E14", "D13"]
-led_labels = ["RED_BUT_LED", "GRN_BUT_LED", "BLU_BUT_LED", "YEL_BUT_LED", "HBT_LED"]
-adc_pins = ["A0", "A1"]
-adc_labels = ["JOY_X", "JOY_Y"]
-
-pwm_pins = ["A2"] #uses timer 3 and channel 1, I don't know how you'd like these represented
-pwm_labels = ["BUZZER"]
-
-neo_pins = ["D8", "E4"]
-neo_labels = ["NEO_STATUS", "NEO_STRIP"]
-neo_num_pixels = [1,5]
+{
+  "model": "joypad",
+  "main": "edge",
+  "driver": "Joypad",
+  "init": "init",
+  "parameters": [
+    {
+      "name": "JOY_SW",
+      "type": "button",
+      "pin": "E0",
+      "old": null
+    },
+    {
+      "name": "D_UP",
+      "type": "button",
+      "pin": "E1",
+      "old": null
+    },
+    {
+      "name": "D_RIGHT",
+      "type": "button",
+      "pin": "E2",
+      "old": null
+    },
+    {
+      "name": "D_DOWN",
+      "type": "button",
+      "pin": "D1",
+      "old": null
+    },
+    {
+      "name": "D_PUSH",
+      "type": "button",
+      "pin": "D0",
+      "old": null
+    },
+    {
+      "name": "D_LEFT",
+      "type": "button",
+      "pin": "E3",
+      "old": null
+    },
+    {
+      "name": "START",
+      "type": "button",
+      "pin": "E5",
+      "old": null
+    },
+    {
+      "name": "SELECT",
+      "type": "button",
+      "pin": "E6",
+      "old": null
+    },
+    {
+      "name": "FUNCTION",
+      "type": "button",
+      "pin": "D5",
+      "old": null
+    },
+    {
+      "name": "RED_BUT",
+      "type": "button",
+      "pin": "E8",
+      "old": null
+    },
+    {
+      "name": "GRN_BUT",
+      "type": "button",
+      "pin": "E11",
+      "old": null
+    },
+    {
+      "name": "BLU_BUT",
+      "type": "button",
+      "pin": "E13",
+      "old": null
+    },
+    {
+      "name": "YEL_BUT",
+      "type": "button",
+      "pin": "E15",
+      "old": null
+    },
+    {
+      "name": "JOY_X",
+      "type": "adc",
+      "pin": "A0",
+      "old": null,
+      "noise": 10
+    },
+    {
+      "name": "JOY_Y",
+      "type": "adc",
+      "pin": "A1",
+      "old": null,
+      "noise": 10
+    },
+    {
+      "name": "RED_BUT_LED",
+      "type": "led",
+      "pin": "E9",
+      "value": 0,
+      "dirty": true
+    },
+    {
+      "name": "GRN_BUT_LED",
+      "type": "led",
+      "pin": "E10",
+      "value": 0,
+      "dirty": true
+    },
+    {
+      "name": "BLU_BUT_LED",
+      "type": "led",
+      "pin": "E12",
+      "value": 0,
+      "dirty": true
+    },
+    {
+      "name": "YEL_BUT_LED",
+      "type": "led",
+      "pin": "E14",
+      "value": 0,
+      "dirty": true
+    },
+    {
+      "name": "HBT_LED",
+      "type": "led",
+      "pin": "D13",
+      "value": 0,
+      "dirty": true
+    },
+    {
+      "name": "BUZZER",
+      "type": "pwm",
+      "pin": "A2",
+      "value": 0,
+      "dirty": true
+    },
+    {
+      "name": "NEO_STATUS",
+      "type": "neo",
+      "pin": "D8",
+      "value": 0,
+      "dirty": false
+    },
+    {
+      "name": "NEO_STRIP",
+      "type": "neo",
+      "pin": "E4",
+      "value": 0,
+      "dirty": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "JOY_SW_on"
+    },
+    {
+      "name": "JOY_SW_off"
+    },
+    {
+      "name": "D_UP_on"
+    },
+    {
+      "name": "D_UP_off"
+    },
+    {
+      "name": "D_RIGHT_on"
+    },
+    {
+      "name": "D_RIGHT_off"
+    },
+    {
+      "name": "D_DOWN_on"
+    },
+    {
+      "name": "D_DOWN_off"
+    },
+    {
+      "name": "D_PUSH_on"
+    },
+    {
+      "name": "D_PUSH_off"
+    },
+    {
+      "name": "D_LEFT_on"
+    },
+    {
+      "name": "D_LEFT_off"
+    },
+    {
+      "name": "START_on"
+    },
+    {
+      "name": "START_off"
+    },
+    {
+      "name": "SELECT_on"
+    },
+    {
+      "name": "SELECT_off"
+    },
+    {
+      "name": "FUNCTION_on"
+    },
+    {
+      "name": "FUNCTION_off"
+    },
+    {
+      "name": "RED_BUT_on"
+    },
+    {
+      "name": "RED_BUT_off"
+    },
+    {
+      "name": "GRN_BUT_on"
+    },
+    {
+      "name": "GRN_BUT_off"
+    },
+    {
+      "name": "BLU_BUT_on"
+    },
+    {
+      "name": "BLU_BUT_off"
+    },
+    {
+      "name": "YEL_BUT_on"
+    },
+    {
+      "name": "YEL_BUT_off"
+    },
+    {
+      "name": "JOY_X",
+      "range": {
+        "low": 0,
+        "high": 4096
+      }
+    },
+    {
+      "name": "JOY_Y",
+      "range": {
+        "low": 0,
+        "high": 4096
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "name": "RED_BUT_LED_on"
+    },
+    {
+      "name": "RED_BUT_LED_off"
+    },
+    {
+      "name": "RED_BUT_LED_toggle"
+    },
+    {
+      "name": "GRN_BUT_LED_on"
+    },
+    {
+      "name": "GRN_BUT_LED_off"
+    },
+    {
+      "name": "GRN_BUT_LED_toggle"
+    },
+    {
+      "name": "BLU_BUT_LED_on"
+    },
+    {
+      "name": "BLU_BUT_LED_off"
+    },
+    {
+      "name": "BLU_BUT_LED_toggle"
+    },
+    {
+      "name": "YEL_BUT_LED_on"
+    },
+    {
+      "name": "YEL_BUT_LED_off"
+    },
+    {
+      "name": "YEL_BUT_LED_toggle"
+    },
+    {
+      "name": "HBT_LED_on"
+    },
+    {
+      "name": "HBT_LED_off"
+    },
+    {
+      "name": "HBT_LED_toggle"
+    },
+    {
+      "name": "BUZZER"
+    },
+    {
+      "name": "NEO_STATUS"
+    },
+    {
+      "name": "NEO_STRIP"
+    }
+  ]
+}

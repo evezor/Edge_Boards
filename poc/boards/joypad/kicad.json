@@ -1,6 +1,7 @@
 {
     "button_pins": ["E0", "E1", "E2", "D1", "D0", "E3", "E5", "E6", "D5", "E8", "E11", "E13", "E15"],
-    "button_labels":  ["JOY_SW", "5WAY_UP", "5WAY_RIGHT", "5WAY_DOWN", "5WAY_PUSH", "5WAY_LEFT", "START", "SELECT", "FUNCTION", "RED_BUT", "GRN_BUT", "BLU_BUT", "YEL_BUT"],
+    "bad_button_labels":  ["JOY_SW", "5WAY_UP", "5WAY_RIGHT", "5WAY_DOWN", "5WAY_PUSH", "5WAY_LEFT", "START", "SELECT", "FUNCTION", "RED_BUT", "GRN_BUT", "BLU_BUT", "YEL_BUT"],
+    "button_labels":  ["JOY_SW", "D_UP", "D_RIGHT", "D_DOWN", "D_PUSH", "D_LEFT", "START", "SELECT", "FUNCTION", "RED_BUT", "GRN_BUT", "BLU_BUT", "YEL_BUT"],
 
     "led_pins":  ["E9", "E10", "E12", "E14", "D13"],
     "led_labels":  ["RED_BUT_LED", "GRN_BUT_LED", "BLU_BUT_LED", "YEL_BUT_LED", "HBT_LED"],

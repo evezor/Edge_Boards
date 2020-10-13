@@ -9,10 +9,166 @@ from pyb import Pin, Timer
 
 class Driver:
 
-    parameters = []
+    parameters = {}
 
-    button_pins = []
-    led_pins = []
+    pins = {}
+
+    def setup_pins(self):
+
+        for key in self.parameters:
+            parameter = self.parameters[key]
+
+            """
+            "name": "JOY_SW",
+            "type": "button",
+            "pin": "E0",
+
+            'pwm_labels': ['BUZZER'],
+            'pwm_pins': ['A2']}
+
+            'neo_labels': ['NEO_STATUS', 'NEO_STRIP'],
+            'neo_pins': ['D8', 'E4'],
+            """
+
+            if parameter['type'] == "button":
+                self.pins[parameter['name']] = \
+                    Pin(parameter['pin'], Pin.IN, Pin.PULL_UP)
+
+            elif parameter['type'] == "adc":
+                self.pins[parameter['name']] = \
+                    pyb.ADC(parameter['pin'])
+
+            elif parameter['type'] == "led":
+                pin = Pin(parameter['pin'], Pin.OUT)
+                self.pins[parameter['name']] = pin
+
+            elif parameter['type'] == "pwm":
+                pin = Pin(parameter['pin'], Pin.OUT)
+                tim = Timer(3, freq=1000)
+                self.pins[parameter['name']] = \
+                        tim.channel(2, Timer.PWM, pin=pin )
+
+            elif parameter['type'] == "neo":
+                pin = Pin(parameter['pin'], Pin.OUT)
+                self.pins[parameter['name']] = pin
+
+
+    def init(self):
+        self.setup_pins()
+        self.wake_up_can()
+
+
+    # Inputs
+    # Iris has 3 steps: read, act, save:
+
+    # Read hardware, set parameter
+
+    def read_states(self):
+        # read values from hardware, save to parameter table
+
+        for key in self.parameters:
+            parameter = self.parameters[key]
+
+            """
+            "name": "JOY_SW",
+            "type": "button",
+            "pin": "E0",
+            """
+
+            if parameter['type'] == "button":
+                parameter['new'] = \
+                    self.pins[parameter['name']].value()
+
+            elif parameter['type'] == "adc":
+                parameter['new'] = \
+                    self.pins[parameter['name']].read()
+
+        return None
+
+    # part 2: Act
+    # Maybe Iris will check if an input has changed
+    # Iris will call some other function that will likely call these
+
+    def button_ck(self, name, value ):
+        # did the button change to the passed value
+        # (or is the old value None, like on startup)
+
+        parameter = self.parameters[name]
+
+        if parameter['old'] is None \
+                and parameter['new'] == value:
+            return parameter['new']
+
+        if parameter['old'] != parameter['new'] \
+                and parameter['new'] == value:
+            return parameter['new']
+        else:
+            return None
+
+    def adc(self, name ):
+        # did the analog value change beyond the noise threashold
+        # (or is the old value None, like on startup)
+
+        parameter = self.parameters[name]
+
+        if parameter['old'] is None:
+            return parameter['new']
+
+        if abs(parameter['old'] - parameter['new']) >= parameter['noise']:
+            return parameter['new']
+        else:
+            # hack: reset new back to old so slow change doesn't creap noise
+            # this makes me think we need a dirty bit
+            # so we can control when old gets updated.
+            parameter['new'] = parameter['old']
+            return None
+
+    # wrap up read,act,save:
+    def save_states(self):
+
+        for key in self.parameters:
+            parameter = self.parameters[key]
+
+            if parameter['type'] in [ "button", "adc", "code"]:
+                parameter = self.parameters[key]
+                parameter['old'] = parameter['new']
+
+    # outputs
+
+    # Hardware gets set by setting a parameter value and dirty
+
+    def set_states(self, name, value):
+        # push new values to hardware
+
+        for key in self.parameters:
+            parameter =self.parameters[key]
+
+            if parameter['dirty']:
+
+                if parameter['type'] == "led":
+                    self.pins[parameter[pin]].value(v)
+
+                elif parameter['type'] == "pwm":
+                    self.pins[parameter[pin]].pulse_width_percent(val)
+
+                elif parameter['type'] == "neo":
+                    pass
+
+                parameter['dirty'] = False
+
+
+    def led_set(self, name, value):
+        print( "#3",  name, self.pins[name], value )
+        self.pins[name].value(value)
+
+
+    def led_toggle(self, name):
+        # flip value between 0 and 1
+        value = 0 if self.parameters[name] else 1
+        self.led_set( name, value)
+
+    def led_dim(self, name, value):
+        self.pins[name].pulse_width_percent(value)
 
     # stops:
 
@@ -48,16 +204,8 @@ class Driver:
     # Board things
 
     def wake_up_can(self):
+        print("waking up can...")
         can_chip_pin = Pin("D6", Pin.OUT)
         can_chip_pin.value(0)
 
-    def init(self):
-        pass
 
-    # Iris things
-    def read_states(self):
-        pass
-
-    def save_states(self):
-        for parameter in self.parameters:
-            parameter['old value'] =  parameter['new value']

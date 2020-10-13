@@ -36,9 +36,14 @@ class Board():
             driver = getattr( module, driver )
             self.driver = driver()
 
-            driver.parameters = self.manifest['parameters']
-            for parameter in driver.parameters:
-                parameter['new value'] = parameter['old value']
+            # manifest parameters create 2 things:
+            # 1. list of names in edge.parameters
+            # 2. dict in driver.parameters
+
+            for parameter in self.manifest['parameters']:
+                self.parameters.append(parameter['name'])
+                driver.parameters[parameter['name']] = parameter
+
 
             if "init" in self.manifest:
                 init = self.manifest['init']

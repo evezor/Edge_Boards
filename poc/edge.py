@@ -14,6 +14,7 @@ class Edge(Board):
     map_version = None
     can_id = None
 
+    parameters = []
     inputs = []
     outputs = []
 
@@ -165,7 +166,7 @@ class Edge(Board):
                         'outputs': self.outputs,
                         'parameters': self.driver.parameters,
                         }
-                json.dump(sotwca, open('state.json', 'w'))
+                # json.dump(sotwca, open('state.json', 'w'))
 
             elif beer.header=='SET_PARMA':
                 parma_no, value = list(beer.message)
@@ -205,6 +206,8 @@ class Edge(Board):
 
                         function_name = output['function_name']
                         function = getattr(self.driver, function_name)
+                        # print("#1 output:", output)
+                        # print("#3 function_name:", function_name)
                         if 'range' in output:
 
                             val, low_input, high_input = struct.unpack(
@@ -243,7 +246,6 @@ class Edge(Board):
                     low = input_['range']['low']
                     high = input_['range']['high']
                     message =  struct.pack("HHH", ret, low, high)
-                    print("check_inputs #2", input_, ret)
                 else:
                     message =  b''
 

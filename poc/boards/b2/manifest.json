@@ -5,8 +5,10 @@
     "init": "init",
 
 "parameters": [
-    { "name": "timer",     "old value": "stop" },
-    { "name": "cook time", "old value": 5 }
+    { "name": "timer",
+        "type": "code", "old": "stop", "new": "stop" },
+    { "name": "cook time",
+       "type": "code?", "old": 5 }
 ],
 
 "inputs": [

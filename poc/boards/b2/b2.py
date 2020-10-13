@@ -13,20 +13,25 @@ class B2(Driver):
     # inputs:
 
     def read_states(self):
-        if self.end_time is not None:
-            if time.time() >= self.end_time:
-                parameter = next(d for d in self.parameters if d["name"] == "timer")
-                parameter['new value'] = "stop"
-                self.end_time = None
+
+        parameter_name = "timer"
+        parameter = self.parameters[parameter_name]
+
+        if self.end_time is None:
+            parameter['new'] = "stop"
+
+        elif time.time() >= self.end_time:
+            parameter['new'] = "stop"
+            self.end_time = None
 
     def timer_end(self):
         """ did the button change from running to stop? """
 
         parameter_name = "timer"
+        parameter = self.parameters[parameter_name]
 
-        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
-        ov = parameter['old value']
-        nv = parameter['new value']
+        ov = parameter['old']
+        nv = parameter['new']
 
         ret = self.truth_fairy(ov=="running" and nv=="stop")
 
@@ -38,13 +43,13 @@ class B2(Driver):
     def timer_start(self):
 
         parameter_name="cook time"
-        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
-        self.end_time = time.time() + parameter['old value']
+        parameter = self.parameters[parameter_name]
+        self.end_time = time.time() + parameter['old']
 
         parameter_name="timer"
-        parameter = next(d for d in self.parameters if d["name"] == parameter_name)
-        parameter['old value'] = "running"
-        parameter['new value'] = "running"
+        parameter = self.parameters[parameter_name]
+
+        parameter['new'] = "running"
 
 
 if __name__ == '__main__':

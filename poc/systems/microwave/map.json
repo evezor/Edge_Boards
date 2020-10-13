@@ -23,10 +23,10 @@
         {
             "input":
                 { "board": "B", "function": "pot_0" ,
-                    "range": {"low": 4076, "high": 10}},
+                    "range": {"low": 300, "high": 2000 }},
             "outputs": [
                 { "board": "A", "function": "led_0_dim",
-                    "range": {"low": 1, "high": 20}}
+                    "range": {"low": 5, "high": 20 }}
             ]
         },
 
@@ -35,9 +35,7 @@
             "input":
                 { "board": "A", "function": "button_0_on", "priority":"medium" },
             "outputs": [
-                { "board": "A", "function": "led_0_on" },
                 { "board": "A", "function": "led_1_on" },
-                { "board": "B", "function": "led_0_on" },
                 { "board": "B", "function": "led_1_on" },
                 { "board": "C", "function": "timer_start"}
             ]
@@ -46,9 +44,7 @@
             "input":
                 { "board": "A", "function": "button_1_on", "priority":"medium" },
             "outputs": [
-                { "board": "A", "function": "led_0_off" },
                 { "board": "A", "function": "led_1_off" },
-                { "board": "B", "function": "led_0_off" },
                 { "board": "B", "function": "led_1_off" }
             ]
         },
@@ -56,9 +52,7 @@
             "input":
                 { "board": "C", "function": "timer_end", "priority":"medium" },
             "outputs": [
-                { "board": "A", "function": "led_0_off" },
                 { "board": "A", "function": "led_1_off" },
-                { "board": "B", "function": "led_0_off" },
                 { "board": "B", "function": "led_1_off" }
             ]
         }

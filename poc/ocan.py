@@ -93,6 +93,7 @@ class OCan():
 
         # TODO: try: .send() except: if no buffers sleep and loop.
 
+        time.sleep_ms(1)
         pending_tx = True
         while pending_tx:
 
@@ -134,6 +135,8 @@ class OCan():
 
 
     def _recieve(self, fifo, timeout):
+
+        # if self.can.any(0):
 
         try:
             r = self.can.recv(fifo, timeout=timeout)

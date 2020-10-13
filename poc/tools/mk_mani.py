@@ -14,18 +14,19 @@ def doit(args):
     kicad_full = os.path.join( args.board_dir, args.model, args.kicad_file)
     kicad = json.load(open(kicad_full))
 
-    kicad2 = {
-        'buttons': list(zip( kicad['button_labels'], kicad['button_pins'])),
-        'leds': list(zip( kicad['led_labels'], kicad['led_pins'] )),
-        'adcs': list(zip( kicad['adc_labels'], kicad['adc_pins'] )),
-        'pwms': list(zip( kicad['pwm_labels'], kicad['pwm_pins'] )),
-        'neos': list(zip( kicad['neo_labels'], kicad['neo_pins'] )),
-    }
+    if "button_labels" in kicad:
 
-    kicad_full = os.path.join( args.board_dir, args.model, "kicad2.json" )
-    json.dump(kicad2, open(kicad_full, 'w'), indent=2)
-    kicad = json.load(open(kicad_full))
+        kicad2 = {
+            'buttons': list(zip( kicad['button_labels'], kicad['button_pins'])),
+            'adcs': list(zip( kicad['adc_labels'], kicad['adc_pins'] )),
+            'leds': list(zip( kicad['led_labels'], kicad['led_pins'] )),
+            'pwms': list(zip( kicad['pwm_labels'], kicad['pwm_pins'] )),
+            'neos': list(zip( kicad['neo_labels'], kicad['neo_pins'] )),
+        }
 
+        kicad_full = os.path.join( args.board_dir, args.model, "kicad2.json" )
+        json.dump(kicad2, open(kicad_full, 'w'), indent=2)
+        kicad = json.load(open(kicad_full))
 
     pprint(kicad)
 
@@ -38,22 +39,25 @@ def doit(args):
             "init": "init",
             }
 
-    f = open( "{}.py".format(args.model), "w" )
+    py_full = os.path.join(
+            args.board_dir, args.model, "{}.py".format(args.model))
+    f = open( py_full, "w" )
     f.write("from driver import Driver\n\n")
-    f.write("class {}(driver):\n\n".format(driver))
+    f.write("class {}(Driver):\n\n".format(driver))
 
+    # f.write(f"    # parameters \n\n")
     parameters = []
+    inputs = []
+    outputs = []
+
     for label,pin in kicad['buttons']:
+
         parameters.append(
                 { "name": label,
                     "type": "button",
                     "pin": pin,
-                    "old_value": None,
+                    "old": None,
                     } )
-
-    inputs = []
-
-    for label in kicad['buttons']:
 
         name = f"{label}_on"
         inputs.append( { "name": name } )
@@ -66,31 +70,82 @@ def doit(args):
         f.write(f"        return self.button_ck( '{label}', 1 )\n\n")
 
 
-    for label in kicad['adcs']:
+    for label,pin in kicad['adcs']:
+
+        parameters.append(
+                { "name": label,
+                    "type": "adc",
+                    "pin": pin,
+                    "old": None,
+                    "noise": 20,
+                    } )
+
         name = f"{label}"
         inputs.append( { "name": name,
             "range": {"low":0, "high": 4096}} )
+
         f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.button_ck( '{label}', 1 )\n\n")
+        f.write(f"        return self.adc( '{label}' )\n\n")
 
-    outputs = []
 
-    for label in kicad['leds']:
+    for label,pin in kicad['leds']:
+
+        parameters.append(
+                { "name": label,
+                    "type": "led",
+                    "pin": pin,
+                    "value": 0,
+                    "dirty": True,
+                    } )
 
         name = f"{label}_on"
         outputs.append( { "name": name } )
         f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.button_set( '{label}', 0 )\n\n")
+        f.write(f"        return self.led_set( '{label}', 1 )\n\n")
 
         name = f"{label}_off"
         outputs.append( { "name": name } )
         f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.button_set( '{label}', 1 )\n\n")
+        f.write(f"        return self.led_set( '{label}', 0 )\n\n")
 
         name = f"{label}_toggle"
         outputs.append( { "name": name } )
         f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.button_toggle( '{label}'1 )\n\n")
+        f.write(f"        return self.led_toggle( '{label}' )\n\n")
+
+    for label,pin in kicad['pwms']:
+
+        parameters.append(
+                { "name": label,
+                    "type": "pwm",
+                    "pin": pin,
+                    "value": 0,
+                    "dirty": True,
+                    } )
+
+        name = f"{label}"
+        outputs.append( { "name": name,
+            "range": {"low":0, "high": 4096}} )
+
+        f.write(f"    def {name}(self, value):\n")
+        f.write(f"        return self.led_dim( '{label}', value )\n\n")
+
+
+    for label,pin in kicad['neos']:
+
+        parameters.append(
+                { "name": label,
+                    "type": "neo",
+                    "pin": pin,
+                    "value": 0,
+                    "dirty": False,
+                    } )
+
+        name = f"{label}"
+        outputs.append( { "name": name } )
+        f.write(f"    def {name}(self, value):\n")
+        f.write(f"        return self.neo_play( '{label}', value )\n\n")
+
 
     manifest['parameters'] = parameters
     manifest['inputs'] = inputs

@@ -168,11 +168,6 @@ class Edge(Board):
                         }
                 # json.dump(sotwca, open('state.json', 'w'))
 
-            elif beer.header=='SET_PARMA':
-                parma_no, value = list(beer.message)
-                parma_name = self.driver.parameters[parma_no]['name']
-                self.driver.parameters[parma_name] = value
-
             elif beer.header=='RESUME':
                 self.pause = False
 
@@ -194,7 +189,10 @@ class Edge(Board):
                 if beer.channel == "NWK":
                     nwk(beer)
 
-            if not self.pause and beer.channel in ["FH", "FM", "FL"]:
+            if self.pause:
+                print("paused.  go way.")
+
+            elif beer.channel in ["FH", "FM", "FL"]:
                 # BeerCan(channel='FM', can_id=2, header=0, ... message=b'')
                 # see if this message should trigger any outputs
                 # TODO: optimize this loop into a dict lookup
@@ -229,6 +227,24 @@ class Edge(Board):
                         else:
                             ret = function()
 
+
+            elif beer.channel in [
+                    "GET_PARMA_L", "GET_PARMA_M", "GET_PARMA_H"]:
+                parma_no = list(beer.message)
+                parma_name = self.parameters[parma_no]
+                value = self.driver.parameters[parma_name]['new']
+                # maybe this, maybe not:
+                self.ocan.send( beer.channel, self.can_id, header=_parma_nono, message=value)
+
+
+            elif beer.channel in [
+                    "SET_PARMA_L", "SET_PARMA_M", "SET_PARMA_H"]:
+                # good example of the relation between:
+                # edge list of parameter names
+                # driver dict keyed on parameter name
+                parma_no, value = list(beer.message)
+                parma_name = self.parameters[parma_no]
+                self.driver.parameters[parma_name] = value
 
 
     def check_inputs(self):

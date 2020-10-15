@@ -1,10 +1,11 @@
 from machine import Pin
 import utime
 from pyb import CAN
-
+from machine import Pin
 
 #Evezor edge Bus driver basic implementation of Oshbus
-
+led1 = Pin("D6", Pin.OUT)
+led1.low()
 
 #Prepare controller for initialization 
 
@@ -102,6 +103,6 @@ def main():
     fifo1()
     runServices()
 
-print("Device Startup")
+print("Device Startup FEATHER3")
 while(True):
     main()

@@ -1,0 +1,22 @@
+{
+    "model": "b2",
+    "main": "edge",
+    "driver": "B2",
+    "init": "init",
+
+"parameters": [
+    { "name": "timer",
+        "type": "code", "old": "stop", "new": "stop" },
+    { "name": "cook time",
+       "type": "code?", "old": 5 }
+],
+
+"inputs": [
+    { "name": "timer_end" }
+],
+
+"outputs": [
+    { "name": "timer_start" }
+]
+
+}

@@ -1,0 +1,21 @@
+{
+    "version": 1,
+
+    "boards": {
+        "A": {"model": "b3"},
+        "B": {"model": "b3"},
+        "C": {"model": "b2"}
+    },
+
+    "maps": [
+        { "input":
+            { "board": "A", "function": "button_0_on", "priority":"medium" },
+            "outputs": [
+                { "board": "B", "function": "led_1_on" } ] },
+
+        { "input":
+            { "board": "A", "function": "button_0_off", "priority":"medium" },
+            "outputs": [
+                { "board": "B", "function": "led_1_off" } ] }
+    ]
+}

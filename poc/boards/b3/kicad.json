@@ -1,0 +1,21 @@
+{
+    "buttons": [
+        ["button_0", "D11"],
+        ["button_1", "D12"]
+    ],
+
+    "adcs": [
+        ["pot_0", "A0"]
+    ],
+
+    "leds": [
+        ["led_1", "D13"]
+    ],
+
+    "pwms": [
+        ["led_0_dim", "D5"]
+    ],
+
+    "neos": [
+    ]
+}

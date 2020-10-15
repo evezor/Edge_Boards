@@ -116,9 +116,9 @@ def get_args():
 
     parser.add_argument("--system_dir", default="systems",
             help="dir of systems")
-    parser.add_argument("--board_dir", default="boards",
+    parser.add_argument("--board_dir", default="boards/edges",
             help="dir of boards (manifests)")
-    parser.add_argument("--output_dir", default="systems",
+    parser.add_argument("--output_dir", default="boards/busDrivers/zorg",
             help="dir for mapo.json")
 
     args = parser.parse_args()

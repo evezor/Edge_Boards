@@ -1,3 +1,5 @@
+Edge Boards is a working title for the upcoming Evezor Modular Automation System.
+
 board.py: Generic CAN bus abstract class. 2 Children, Zorg and Edge
 
 bundle.py: Bundles bits together into an arbitration ID

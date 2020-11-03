@@ -175,7 +175,7 @@ def get_args():
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("--board_dir", default="boards",
+    parser.add_argument("--board_dir", default="boards/edges",
             help="dir of boards")
     parser.add_argument("--model", default="joypad",
             help="board model, dir in boards to find kicad file")

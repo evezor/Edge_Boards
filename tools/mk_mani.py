@@ -116,6 +116,9 @@ def doit(args):
 
     for label,pin in kicad['pwms']:
 
+        label = label.lower()
+        pin = pin.lower()
+
         parameters.append(
                 { "name": label,
                     "type": "pwm",
@@ -134,6 +137,9 @@ def doit(args):
     f.write(f"    # neos:\n\n")
 
     for label,pin in kicad['neos']:
+
+        label = label.lower()
+        pin = pin.lower()
 
         parameters.append(
                 { "name": label,

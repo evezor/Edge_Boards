@@ -50,7 +50,12 @@ def doit(args):
     inputs = []
     outputs = []
 
+    f.write(f"    # buttons:\n\n")
+
     for label,pin in kicad['buttons']:
+
+        label = label.lower()
+        pin = pin.lower()
 
         parameters.append(
                 { "name": label,
@@ -59,18 +64,18 @@ def doit(args):
                     "old": None,
                     } )
 
-        name = f"{label}_on"
+        name = f"{label}"
         inputs.append( { "name": name } )
         f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.button_ck( '{label}', 0 )\n\n")
+        f.write(f"        return self.button_ck( '{label}' )\n\n")
 
-        name = f"{label}_off"
-        inputs.append( { "name": name } )
-        f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.button_ck( '{label}', 1 )\n\n")
 
+    f.write(f"    # adcs:\n\n")
 
     for label,pin in kicad['adcs']:
+
+        label = label.lower()
+        pin = pin.lower()
 
         parameters.append(
                 { "name": label,
@@ -87,8 +92,12 @@ def doit(args):
         f.write(f"    def {name}(self):\n")
         f.write(f"        return self.adc( '{label}' )\n\n")
 
+    f.write(f"    # leds:\n\n")
 
     for label,pin in kicad['leds']:
+
+        label = label.lower()
+        pin = pin.lower()
 
         parameters.append(
                 { "name": label,
@@ -98,20 +107,12 @@ def doit(args):
                     "dirty": True,
                     } )
 
-        name = f"{label}_on"
+        name = f"{label}"
         outputs.append( { "name": name } )
-        f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.led_set( '{label}', 1 )\n\n")
+        f.write(f"    def {name}(self,value):\n")
+        f.write(f"        return self.led_set( '{label}', value )\n\n")
 
-        name = f"{label}_off"
-        outputs.append( { "name": name } )
-        f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.led_set( '{label}', 0 )\n\n")
-
-        name = f"{label}_toggle"
-        outputs.append( { "name": name } )
-        f.write(f"    def {name}(self):\n")
-        f.write(f"        return self.led_toggle( '{label}' )\n\n")
+    f.write(f"    # pwms:\n\n")
 
     for label,pin in kicad['pwms']:
 
@@ -130,6 +131,7 @@ def doit(args):
         f.write(f"    def {name}(self, value):\n")
         f.write(f"        return self.led_dim( '{label}', value )\n\n")
 
+    f.write(f"    # neos:\n\n")
 
     for label,pin in kicad['neos']:
 

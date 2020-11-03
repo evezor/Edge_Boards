@@ -187,7 +187,7 @@ def get_args():
             help="dir of boards")
     parser.add_argument("--model", default="joypad",
             help="board model, dir in boards to find kicad file")
-    parser.add_argument("--kicad_file", default="kicad.json",
+    parser.add_argument("--kicad_file", default="pins.json",
             help="name of kicad file")
 
     parser.add_argument("--output", default="manifest.json",

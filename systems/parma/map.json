@@ -1,0 +1,31 @@
+{
+    "version": 1,
+
+    "boards": {
+        "A": {"model": "b3"},
+        "B": {"model": "b3"},
+        "C": {"model": "b2"}
+    },
+
+    "maps": [
+
+        { "input":
+            { "type":"function",
+                 "board": "A",
+                 "name": "button_0_on" },
+
+          "outputs": [
+              { "type": "read param",
+                    "board": "B",
+                    "name": "pot_0",
+
+                    "target": {
+                        "type": "write param",
+                            "board" : "A",
+                            "name" : "led_0_dim"
+                      }
+              }
+          ]
+        }
+       ]
+}

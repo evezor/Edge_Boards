@@ -1,0 +1,23 @@
+﻿system/collective/something: a bunch of boards hooked up and hopefully working.
+
+Map: the configuration data that maps foo to function calls on some board. Previously called the dictionary. 
+
+
+Board guid: unique id across all boards
+Board part number: Same value for all of the boards that are the same.
+Board ID: number assigned to a guid for canbus protocol 
+Board name: unique across the system.  Human puts it into the IDE/json to reference a board in the collective. 
+
+Thing Joe said – provision? : the process of associating individual boards to their names defined in the map.  Some sort of process where a human tells the system what board is what.  “press the button on SwitchABC”  
+
+foo: the butterfly that causes butterfly messages to be sent. (either over the bus or locally).  event?  trigger? self fulfillment.
+
+butterfly messages: the point of all this.  What the IDE defines, not the heart beat and map deployment.
+
+manifest: info about the board.  What it is. Maybe just a part number, maybe also a description, version, manufacture.  It is used to help build the map by providing an inventory list to the IDE, and later to provision. 
+
+Inventory time: defining the set of boards that will make up a system.
+IDE time: when a human is using the IDE to do things.
+Provision time: when a human is helping the system figure out what is what
+Boot time: When a board is turned on or reset, the process untill it functional.
+Run time: onece it is functional.

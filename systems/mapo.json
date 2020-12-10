@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "boards": {
+    "A": {
+      "inputs": [
+        {
+          "channel": "FN_MD",
+          "function_no": 0
+        }
+      ],
+      "outputs": [],
+      "parameters": []
+    },
+    "B": {
+      "inputs": [],
+      "outputs": [
+        {
+          "source": {
+            "channel": "FN_MD",
+            "function_no": 0
+          },
+          "function_no": 0
+        }
+      ],
+      "parameters": []
+    }
+  }
+}

@@ -5,242 +5,203 @@
   "init": "init",
   "parameters": [
     {
-      "name": "JOY_SW",
+      "name": "joy_sw",
       "type": "button",
-      "pin": "E0",
+      "pin": "e0",
       "old": null
     },
     {
-      "name": "D_UP",
+      "name": "d_up",
       "type": "button",
-      "pin": "E1",
+      "pin": "e1",
       "old": null
     },
     {
-      "name": "D_RIGHT",
+      "name": "d_right",
       "type": "button",
-      "pin": "E2",
+      "pin": "e2",
       "old": null
     },
     {
-      "name": "D_DOWN",
+      "name": "d_down",
       "type": "button",
-      "pin": "D1",
+      "pin": "d1",
       "old": null
     },
     {
-      "name": "D_PUSH",
+      "name": "d_push",
       "type": "button",
-      "pin": "D0",
+      "pin": "d0",
       "old": null
     },
     {
-      "name": "D_LEFT",
+      "name": "d_left",
       "type": "button",
-      "pin": "E3",
+      "pin": "e3",
       "old": null
     },
     {
-      "name": "START",
+      "name": "start",
       "type": "button",
-      "pin": "E5",
+      "pin": "e5",
       "old": null
     },
     {
-      "name": "SELECT",
+      "name": "select",
       "type": "button",
-      "pin": "E6",
+      "pin": "e6",
       "old": null
     },
     {
-      "name": "FUNCTION",
+      "name": "function",
       "type": "button",
-      "pin": "D5",
+      "pin": "d5",
       "old": null
     },
     {
-      "name": "RED_BUT",
+      "name": "red_but",
       "type": "button",
-      "pin": "E8",
+      "pin": "e8",
       "old": null
     },
     {
-      "name": "GRN_BUT",
+      "name": "grn_but",
       "type": "button",
-      "pin": "E11",
+      "pin": "e11",
       "old": null
     },
     {
-      "name": "BLU_BUT",
+      "name": "blu_but",
       "type": "button",
-      "pin": "E13",
+      "pin": "e13",
       "old": null
     },
     {
-      "name": "YEL_BUT",
+      "name": "yel_but",
       "type": "button",
-      "pin": "E15",
+      "pin": "e15",
       "old": null
     },
     {
-      "name": "JOY_X",
+      "name": "joy_x",
       "type": "adc",
-      "pin": "A0",
+      "pin": "a0",
       "old": null,
-      "noise": 10
+      "noise": 20
     },
     {
-      "name": "JOY_Y",
+      "name": "joy_y",
       "type": "adc",
-      "pin": "A1",
+      "pin": "a1",
       "old": null,
-      "noise": 10
+      "noise": 20
     },
     {
-      "name": "RED_BUT_LED",
+      "name": "red_but_led",
       "type": "led",
-      "pin": "E9",
+      "pin": "e9",
       "value": 0,
       "dirty": true
     },
     {
-      "name": "GRN_BUT_LED",
+      "name": "grn_but_led",
       "type": "led",
-      "pin": "E10",
+      "pin": "e10",
       "value": 0,
       "dirty": true
     },
     {
-      "name": "BLU_BUT_LED",
+      "name": "blu_but_led",
       "type": "led",
-      "pin": "E12",
+      "pin": "e12",
       "value": 0,
       "dirty": true
     },
     {
-      "name": "YEL_BUT_LED",
+      "name": "yel_but_led",
       "type": "led",
-      "pin": "E14",
+      "pin": "e14",
       "value": 0,
       "dirty": true
     },
     {
-      "name": "HBT_LED",
+      "name": "hbt_led",
       "type": "led",
-      "pin": "D13",
+      "pin": "d13",
       "value": 0,
       "dirty": true
     },
     {
-      "name": "BUZZER",
+      "name": "buzzer",
       "type": "pwm",
-      "pin": "A2",
+      "pin": "a2",
       "value": 0,
       "dirty": true
     },
     {
-      "name": "NEO_STATUS",
+      "name": "neo_status",
       "type": "neo",
-      "pin": "D8",
+      "pin": "d8",
       "value": 0,
       "dirty": false
     },
     {
-      "name": "NEO_STRIP",
+      "name": "neo_strip",
       "type": "neo",
-      "pin": "E4",
+      "pin": "e4",
       "value": 0,
       "dirty": false
     }
   ],
   "inputs": [
     {
-      "name": "JOY_SW_on"
+      "name": "joy_sw"
     },
     {
-      "name": "JOY_SW_off"
+      "name": "d_up"
     },
     {
-      "name": "D_UP_on"
+      "name": "d_right"
     },
     {
-      "name": "D_UP_off"
+      "name": "d_down"
     },
     {
-      "name": "D_RIGHT_on"
+      "name": "d_push"
     },
     {
-      "name": "D_RIGHT_off"
+      "name": "d_left"
     },
     {
-      "name": "D_DOWN_on"
+      "name": "start"
     },
     {
-      "name": "D_DOWN_off"
+      "name": "select"
     },
     {
-      "name": "D_PUSH_on"
+      "name": "function"
     },
     {
-      "name": "D_PUSH_off"
+      "name": "red_but"
     },
     {
-      "name": "D_LEFT_on"
+      "name": "grn_but"
     },
     {
-      "name": "D_LEFT_off"
+      "name": "blu_but"
     },
     {
-      "name": "START_on"
+      "name": "yel_but"
     },
     {
-      "name": "START_off"
-    },
-    {
-      "name": "SELECT_on"
-    },
-    {
-      "name": "SELECT_off"
-    },
-    {
-      "name": "FUNCTION_on"
-    },
-    {
-      "name": "FUNCTION_off"
-    },
-    {
-      "name": "RED_BUT_on"
-    },
-    {
-      "name": "RED_BUT_off"
-    },
-    {
-      "name": "GRN_BUT_on"
-    },
-    {
-      "name": "GRN_BUT_off"
-    },
-    {
-      "name": "BLU_BUT_on"
-    },
-    {
-      "name": "BLU_BUT_off"
-    },
-    {
-      "name": "YEL_BUT_on"
-    },
-    {
-      "name": "YEL_BUT_off"
-    },
-    {
-      "name": "JOY_X",
+      "name": "joy_x",
       "range": {
         "low": 0,
         "high": 4096
       }
     },
     {
-      "name": "JOY_Y",
+      "name": "joy_y",
       "range": {
         "low": 0,
         "high": 4096
@@ -249,58 +210,32 @@
   ],
   "outputs": [
     {
-      "name": "RED_BUT_LED_on"
+      "name": "red_but_led"
     },
     {
-      "name": "RED_BUT_LED_off"
+      "name": "grn_but_led"
     },
     {
-      "name": "RED_BUT_LED_toggle"
+      "name": "blu_but_led"
     },
     {
-      "name": "GRN_BUT_LED_on"
+      "name": "yel_but_led"
     },
     {
-      "name": "GRN_BUT_LED_off"
+      "name": "hbt_led"
     },
     {
-      "name": "GRN_BUT_LED_toggle"
+      "name": "buzzer",
+      "range": {
+        "low": 0,
+        "high": 4096
+      }
     },
     {
-      "name": "BLU_BUT_LED_on"
+      "name": "neo_status"
     },
     {
-      "name": "BLU_BUT_LED_off"
-    },
-    {
-      "name": "BLU_BUT_LED_toggle"
-    },
-    {
-      "name": "YEL_BUT_LED_on"
-    },
-    {
-      "name": "YEL_BUT_LED_off"
-    },
-    {
-      "name": "YEL_BUT_LED_toggle"
-    },
-    {
-      "name": "HBT_LED_on"
-    },
-    {
-      "name": "HBT_LED_off"
-    },
-    {
-      "name": "HBT_LED_toggle"
-    },
-    {
-      "name": "BUZZER"
-    },
-    {
-      "name": "NEO_STATUS"
-    },
-    {
-      "name": "NEO_STRIP"
+      "name": "neo_strip"
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+    "version": 1,
+    "boards": {
+        "A": {
+            "model": "b3"
+        }
+    },
+
+    "maps": [
+        {
+            "input":
+                { "board": "A", "function": "pot_0" },
+            "outputs": [
+                { "board": "A", "function": "led_0_dim" }
+            ]
+        }
+    ]
+}

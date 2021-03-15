@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "boards": {
+    "A": {
+      "inputs": [
+        {
+          "channel": "FM",
+          "number": 0
+        },
+        {
+          "channel": "FM",
+          "number": 1
+        }
+      ],
+      "outputs": [],
+      "parameters": []
+    },
+    "B": {
+      "inputs": [],
+      "outputs": [
+        {
+          "source": {
+            "channel": "FM",
+            "number": 0,
+            "board_name": "A"
+          },
+          "type": "function",
+          "number": 0
+        },
+        {
+          "source": {
+            "channel": "FM",
+            "number": 1,
+            "board_name": "A"
+          },
+          "type": "function",
+          "number": 1
+        }
+      ],
+      "parameters": []
+    },
+    "C": {
+      "inputs": [],
+      "outputs": [],
+      "parameters": []
+    }
+  }
+}

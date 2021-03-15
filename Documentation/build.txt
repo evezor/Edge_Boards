@@ -27,6 +27,12 @@ make
 cd ../ports/stm32
 make
 # make flash
+
+# Enabling the DFU bootloader is super easy. Simply connect the BOOT0 (B0) pin to 3.3V logic. Then press the reset button or power cycle while the board is connected to your computer USB port.
+# https://learn.adafruit.com/adafruit-stm32f405-feather-express/dfu-bootloader-details
+
+Edge boards have a button on B0 labled BOOT.  Boot has to be pressed when reset is released.  Press Boot, press/release Reset, release Boot.
+
 make deploy
 
 # CP 5.3.1  dfu-util -a 0 --dfuse-address 0x08000000 -D build-feather_stm32f405_express/firmware.bin

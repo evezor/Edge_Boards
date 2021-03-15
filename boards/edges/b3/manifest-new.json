@@ -1,0 +1,83 @@
+{
+  "info": {
+    "model": "b3",
+    "main": "edge",
+    "driver": "B3",
+    "init": "init"
+  },
+  "inputs": [{
+      "name": "button_0_on"
+    },
+    {
+      "name": "button_0_off"
+    },
+    {
+      "name": "button_1_on"
+    },
+    {
+      "name": "button_1_off"
+    },
+    {
+      "name": "pot_0",
+      "range": {
+        "low": 0,
+        "high": 4096
+      }
+    }
+  ],
+  "outputs": [{
+      "name": "led_1_on"
+    },
+    {
+      "name": "led_1_off"
+    },
+    {
+      "name": "led_1_toggle"
+    },
+    {
+      "name": "led_0_dim",
+      "range": {
+        "low": 0,
+        "high": 4096
+      }
+    }
+  ],
+  "parameters": [{
+      "name": "button_0",
+      "type": "boolean",
+      "old": null
+    },
+    {
+      "name": "button_1",
+      "type": "boolean",
+      "old": null
+    },
+    {
+      "name": "pot_0_raw",
+      "type": "int",
+      "old": null,
+      "range": {
+        "low": 0,
+        "high": 4096
+      }
+    },
+    {
+      "name": "led_1",
+      "type": "boolean",
+      "value": 0,
+      "dirty": true
+    },
+    {
+      "name": "led_0",
+      "type": "int",
+      "value": 0,
+      "dirty": true,
+      "tooltip": "Andrew will write something here"
+    },
+    {
+      "name": "pot0_noise",
+      "label": "Pot 0 Noise Suppresion (steps)",
+      "type": "int"
+    }
+  ]
+}

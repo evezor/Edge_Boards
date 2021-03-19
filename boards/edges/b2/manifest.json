@@ -1,8 +1,10 @@
 {
-    "model": "b2",
-    "main": "edge",
-    "driver": "B2",
-    "init": "init",
+    "info": {
+        "model": "b2",
+        "main": "edge",
+        "driver": "B2",
+        "init": "init",
+        },
 
 "parameters": [
     { "name": "timer",

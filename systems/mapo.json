@@ -1,7 +1,7 @@
 {
   "version": 1,
   "boards": {
-    "A": {
+    "B": {
       "inputs": [
         {
           "channel": "FN_MD",
@@ -11,13 +11,14 @@
       "outputs": [],
       "parameters": []
     },
-    "B": {
+    "A": {
       "inputs": [],
       "outputs": [
         {
           "source": {
             "channel": "FN_MD",
-            "function_no": 0
+            "function_no": 0,
+            "board": "B"
           },
           "function_no": 0
         }

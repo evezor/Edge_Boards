@@ -15,22 +15,9 @@ class Driver:
 
     def setup_pins(self):
 
-        for key in self.parameters:
-            parameter = self.parameters[key]
+        for parameter in self.parameters.values():
 
-            """
-            "name": "JOY_SW",
-            "type": "button",
-            "pin": "E0",
-
-            'pwm_labels': ['BUZZER'],
-            'pwm_pins': ['A2']}
-
-            'neo_labels': ['NEO_STATUS', 'NEO_STRIP'],
-            'neo_pins': ['D8', 'E4'],
-            """
-
-            if parameter['type'] == "button":
+            if parameter['type'] == "boolean":
                 self.pins[parameter['name']] = \
                     Pin(parameter['pin'], Pin.IN, Pin.PULL_UP)
 
@@ -38,7 +25,7 @@ class Driver:
                 self.pins[parameter['name']] = \
                     pyb.ADC(parameter['pin'])
 
-            elif parameter['type'] == "led":
+            elif parameter['type'] == "int":
                 pin = Pin(parameter['pin'], Pin.OUT)
                 self.pins[parameter['name']] = pin
 
@@ -75,9 +62,10 @@ class Driver:
             "pin": "E0",
             """
 
-            if parameter['type'] == "button":
+            if parameter['type'] == "boolean":
                 parameter['new'] = \
                     self.pins[parameter['name']].value()
+                # print( parameter['new'] )
 
             elif parameter['type'] == "adc":
                 parameter['new'] = \
@@ -89,18 +77,16 @@ class Driver:
     # Maybe Iris will check if an input has changed
     # Iris will call some other function that will likely call these
 
-    def button_ck(self, name, value ):
-        # did the button change to the passed value
+    def button_ck(self, name ):
+        # did the button change
         # (or is the old value None, like on startup)
 
         parameter = self.parameters[name]
 
-        if parameter['old'] is None \
-                and parameter['new'] == value:
+        if parameter['old'] is None:
             return parameter['new']
 
-        if parameter['old'] != parameter['new'] \
-                and parameter['new'] == value:
+        if parameter['old'] != parameter['new']:
             return parameter['new']
         else:
             return None
@@ -129,7 +115,7 @@ class Driver:
         for key in self.parameters:
             parameter = self.parameters[key]
 
-            if parameter['type'] in [ "button", "adc", "code"]:
+            if parameter['type'] in [ "boolean", "adc", "code"]:
                 parameter = self.parameters[key]
                 parameter['old'] = parameter['new']
 
@@ -145,7 +131,7 @@ class Driver:
 
             if parameter['dirty']:
 
-                if parameter['type'] == "led":
+                if parameter['type'] == "int":
                     self.pins[parameter[pin]].value(v)
 
                 elif parameter['type'] == "pwm":
@@ -158,7 +144,7 @@ class Driver:
 
 
     def led_set(self, name, value):
-        print( "#3",  name, self.pins[name], value )
+        # print( "#3",  name, self.pins[name], value )
         self.pins[name].value(value)
 
 

@@ -90,6 +90,7 @@ def doit(args):
             print(output)
 
             source = mk_source(output['source'], board)
+            source['board'] = output['source']['board']
 
             function_no = [
                     d['name'] for d in board['manifest']['outputs'] ].index(

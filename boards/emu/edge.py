@@ -192,7 +192,7 @@ class Edge(Board):
             if self.pause:
                 print("paused.  go way.")
 
-            elif beer.channel in ["FH", "FM", "FL"]:
+            elif beer.channel in ["FN_HI", "FN_MD", "FN_LO"]:
                 # BeerCan(channel='FM', can_id=2, header=0, ... message=b'')
                 # see if this message should trigger any outputs
                 # TODO: optimize this loop into a dict lookup
@@ -225,7 +225,8 @@ class Edge(Board):
 
                             ret = function(y)
                         else:
-                            ret = function()
+                            val = int.from_bytes(beer.message, 'big')
+                            ret = function(val)
 
 
             elif beer.channel in [
@@ -263,7 +264,7 @@ class Edge(Board):
                     high = input_['range']['high']
                     message =  struct.pack("HHH", ret, low, high)
                 else:
-                    message =  b''
+                    message = ret
 
                 beer = self.ocan.send(
                         channel, self.can_id, header=function_no, message=message)
@@ -277,6 +278,8 @@ class Edge(Board):
     def iris(self):
 
         while True:
+
+            # time.sleep(1)
 
             self.heartbeat()
 

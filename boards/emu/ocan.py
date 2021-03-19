@@ -19,9 +19,9 @@ ZORG_CANID = 1
 channels = [
         "e",
         "FAULT",
-        "FH", "GET_PARMA_H", "SET_PARMA_H",
-        "FM", "GET_PARMA_M", "SET_PARMA_M",
-        "FL", "GET_PARMA_L", "SET_PARMA_L",
+        "FN_HI", "GET_PARMA_H", "SET_PARMA_H",
+        "FN_MD", "GET_PARMA_M", "SET_PARMA_M",
+        "FN_Lo", "GET_PARMA_L", "SET_PARMA_L",
         "NWK",
         "",
         "",

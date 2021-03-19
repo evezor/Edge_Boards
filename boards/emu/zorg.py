@@ -58,6 +58,7 @@ class Zorg(Board):
 
             else:
                 board_name = self.commission[bigmac]
+                print(board_name)
 
                 if board_name not in self.mapo['boards']:
                     # Unused board on the wire
@@ -157,7 +158,7 @@ class Zorg(Board):
 
             for output in mad_map['outputs']:
                 print(output)
-                src_board_chan_id = self.mapo['boards'][output['source']['board_name']]['can_id']
+                src_board_chan_id = self.mapo['boards'][output['source']['board']]['can_id']
                 f,l = "BBBB", [
                     channels.index(output['source']['channel']),
                     output['source']['function_no'],
@@ -217,10 +218,12 @@ class Zorg(Board):
 
 
         # load up 'dynamic' can_id lists
+        # takes the place of assigning id's as he boards boot
         for mac in self.commission:
             mac_bytes = bytes([ int(h,16) for h in mac.split(":")])
             board_name = assign_can_id(mac_bytes)
-
+        # maps_send_all()
+        # self.system_state = RUNNING
 
         # um...
         # reboot all the Edges

@@ -1,80 +1,79 @@
 {
-  "model": "b3",
-  "main": "edge",
-  "driver": "B3",
-  "init": "init",
-  "parameters": [
-    {
-      "name": "button_0",
-      "type": "button",
+  "info": {
+    "model": "b3",
+    "main": "edge",
+    "driver": "B3",
+    "init": "init"
+  },
+  "inputs": [
+    { "name": "button0" },
+    { "name": "button1" },
+    { "name": "pot0",
+      "range": {
+        "low": 0,
+        "high": 4096
+      }
+    }
+  ],
+
+  "outputs": [
+      { "name": "led0" },
+      { "name": "led1" }
+  ],
+
+  "parameters": [{
+      "name": "button0",
+      "type": "boolean",
       "pin": "D11",
-      "old": null
+      "old": null,
+      "new": 1
     },
     {
-      "name": "button_1",
-      "type": "button",
+      "name": "button1",
+      "type": "boolean",
       "pin": "D12",
       "old": null
     },
     {
-      "name": "pot_0",
+      "name": "pot0",
+      "type": "int",
       "type": "adc",
       "pin": "A0",
       "old": null,
+      "range": {
+        "low": 0,
+        "high": 4096
+      },
       "noise": 20
     },
-    {
-      "name": "led_1",
-      "type": "led",
+   {
+      "name": "led0",
+      "type": "int",
+      "value": 0,
       "pin": "D13",
+      "dirty": true,
+      "tooltip": "Andrew will write something here"
+    },
+    {
+      "name": "led1",
+      "type": "int",
       "value": 0,
-      "dirty": true
+      "pin": "D13",
+      "dirty": true,
+      "tooltip": "Andrew will write something here"
     },
-    {
-      "name": "led_0_dim",
-      "type": "pwm",
-      "pin": "D5",
+     {
+      "name": "led1d",
+      "type": "dimy",
       "value": 0,
-      "dirty": true
-    }
-  ],
-  "inputs": [
-    {
-      "name": "button_0_on"
-    },
-    {
-      "name": "button_0_off"
-    },
-    {
-      "name": "button_1_on"
-    },
-    {
-      "name": "button_1_off"
-    },
-    {
-      "name": "pot_0",
-      "range": {
-        "low": 0,
-        "high": 4096
-      }
-    }
-  ],
-  "outputs": [
-    {
-      "name": "led_1_on"
-    },
-    {
-      "name": "led_1_off"
-    },
-    {
-      "name": "led_1_toggle"
-    },
-    {
-      "name": "led_0_dim",
-      "range": {
-        "low": 0,
-        "high": 4096
-      }
+      "timer": {
+          "id": 3,
+          "mode":"PWM",
+          "freq": 1000,
+          "channel": 2,
+          "pin": "D5"
+                },
+      "old": null
     }
   ]
 }

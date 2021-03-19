@@ -27,8 +27,8 @@ class Board():
 
     def init_board(self):
         # setup Edge hardware (driven by manifest and driver)
-        if "driver" in self.manifest:
-            driver = self.manifest['driver']
+        if "driver" in self.manifest['info']:
+            driver = self.manifest['info']['driver']
             print("init_board driver:", driver)
             module = __import__(driver)
             print("init_board module:", module)
@@ -45,8 +45,8 @@ class Board():
                 driver.parameters[parameter['name']] = parameter
 
 
-            if "init" in self.manifest:
-                init = self.manifest['init']
+            if "init" in self.manifest['info']:
+                init = self.manifest['info']['init']
                 print("init_board init:", init)
                 init = getattr(self.driver,init)
                 init()

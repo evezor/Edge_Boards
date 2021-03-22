@@ -205,7 +205,7 @@ class Edge(Board):
                         function_name = output['function_name']
                         function = getattr(self.driver, function_name)
                         # print("#1 output:", output)
-                        # print("#3 function_name:", function_name)
+                        print("#3 function_name:", function_name)
                         if 'range' in output:
 
                             val, low_input, high_input = struct.unpack(

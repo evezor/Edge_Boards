@@ -58,7 +58,7 @@
       "name": "led1",
       "type": "int",
       "value": 0,
-      "pin": "D13",
+      "pin": "D5",
       "dirty": true,
       "tooltip": "Andrew will write something here"
     },

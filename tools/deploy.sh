@@ -19,6 +19,7 @@ cp -u  manifest.json $board_zorg
 cd emu
 cp -u main.py bundle.py ocan.py board.py zorg.py $board_zorg
 for board in $board_a $board_b $board_c; do
+    rm -f $board/state.json
     cp -u main.py bundle.py ocan.py board.py edge.py $board
 done
 )

@@ -25,14 +25,13 @@
       "name": "button0",
       "type": "boolean",
       "pin": "D11",
-      "old": null,
-      "new": 1
+      "old": 0
     },
     {
       "name": "button1",
       "type": "boolean",
       "pin": "D12",
-      "old": null
+      "old": 0
     },
     {
       "name": "pot0",
@@ -62,10 +61,11 @@
       "dirty": true,
       "tooltip": "Andrew will write something here"
     },
-     {
+    {
       "name": "led1d",
       "type": "dimy",
       "value": 0,
+      "dirty": true,
       "timer": {
           "id": 3,
           "mode":"PWM",

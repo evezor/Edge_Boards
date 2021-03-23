@@ -279,8 +279,6 @@ class Edge(Board):
 
         while True:
 
-            # time.sleep(1)
-
             self.heartbeat()
 
             # check for messages

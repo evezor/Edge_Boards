@@ -42,6 +42,8 @@ class Driver:
 
     def init(self):
         self.setup_pins()
+        self.read_states()
+        self.set_states()
         self.wake_up_can()
 
 
@@ -123,19 +125,18 @@ class Driver:
 
     # Hardware gets set by setting a parameter value and dirty
 
-    def set_states(self, name, value):
+    def set_states(self):
         # push new values to hardware
 
-        for key in self.parameters:
-            parameter =self.parameters[key]
+        for parameter in self.parameters.values():
 
-            if parameter['dirty']:
+            if parameter.get('dirty'):
 
                 if parameter['type'] == "int":
-                    self.pins[parameter[pin]].value(v)
+                    self.pins[parameter['name']].value(parameter['value'])
 
                 elif parameter['type'] == "pwm":
-                    self.pins[parameter[pin]].pulse_width_percent(val)
+                    self.pins[parameter['name']].pulse_width_percent(val)
 
                 elif parameter['type'] == "neo":
                     pass

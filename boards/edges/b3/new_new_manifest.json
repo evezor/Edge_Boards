@@ -1,0 +1,194 @@
+{
+  "info": {
+    "model": "b3",
+    "main": "edge",
+    "driver": "B3",
+    "init": "init"
+  },
+  "hardware": [
+    {
+      "name": "button0",
+      "label": "Button 0",
+      "data_type": ["boolean"],
+      "ide_location": 1,
+      "ide_port": "output",
+      "function_channel": 3,
+      "function_channel_note": "when talking about the ide_location stuff maybe the place to change the function channel should be in one of the lowest levels, it's not often you'd have to change it but it has to be somewhere",
+      "hardware_type": "digital_input",
+      "pin": "D11",
+      "invert_boolean": "true",
+      "old": 0,
+      "tooltip": "Hardware Button 0",
+      "sub_parameters": ["button0_debounce"],
+      "broadcast": {
+        "on_function": true,
+        "self": true,
+        "announce": false
+      }
+
+    },
+    {
+      "name": "name of Carl's function",
+      "label": "name displayed in the IDE",
+      "data_type": "the data type (this is for semantic ports in IDE)",
+      "ide_location": "This is the location for the port. ie. in the top level, in what is now called parameters or maybe even something that is below parameters for low level stuff that is not accessed regularly",
+      "ide_port": "this is how the ide knows how to configure the port ",
+      "function_channel": "this is the default function channel this should post on",
+      "hardware_type": "this is so Carl's setup_pins() function knows how to deal with the pin",
+      "pin": "the pin",
+      "invert_boolean": "should we invert the data here? Button pressed should send a 1 over the bus. This makes it a 1  Also I think this should probably be a parameter instead" ,
+      "old": "don't know if Carl still needs this but... here it is",
+      "tooltip": "the mouseover text",
+      "sub_parameters": ["these are the sub parameters referenced by the function"],
+      "broadcast": {
+        "on_function": "Should the function broadcast to the bus? To itself,  or is the debug flag set?",
+        "self": true,
+        "announce": false
+      }
+    },
+    {
+      "name": "led0",
+      "label": "Led 0",
+      "data_type": ["boolean"],
+      "ide_location": 1,
+      "ide_port": "input",
+      "function_channel": 3,
+      "hardware_type": "digital_output",
+      "pin": "D13",
+      "invert_boolean": "false",
+      "initial_state": false,
+      "dirty": true,
+      "tooltip": "the mouseover text",
+      "sub_parameters": [null],
+      "broadcast": {
+        "on_function": true,
+        "self": true,
+        "announce": false
+      }
+    },
+    {
+      "name": "name of Carl's function",
+      "label": "name displayed in the IDE",
+      "data_type": "the data type (this is for semantic ports in IDE)",
+      "ide_location": "This is the location for the port. ie. in the top level, in what is now called parameters or maybe even something that is below parameters for low level stuff that is not accessed regularly",
+      "ide_port": "this is how the ide knows how to configure the port ",
+      "function_channel": "I know it seems like this should not have a function channel, but if you query the state of this parameter (function) it will return the result on this channel",
+      "hardware_type": "this is so Carl's setup_pins() function knows how to deal with the pin",
+      "pin": "the pin",
+      "invert_boolean": "Is the default state inverted?",
+      "initial_state": "what is the initial state of this pin. Can it just be called at initialization",
+      "dirty": true,
+      "tooltip": "the mouseover text",
+      "sub_parameters": [null],
+      "broadcast": {
+        "on_function": true,
+        "self": true,
+        "announce": false
+      }
+    },
+    {
+      "name": "pot0",
+      "label": "Pot 0",
+      "data_type": ["us_int", 12],
+      "ide_location": 1,
+      "ide_port": "output",
+      "function_channel": 5,
+      "hardware_type": "ADC",
+      "pin": "A0",
+      "range":  {
+        "low": 0,
+        "high": 4096
+      },
+      "tooltip": "Hardware Pot 0",
+      "sub_parameters": ["pot0_noise"],
+      "broadcast": {
+        "on_function": true,
+        "self": true,
+        "announce": false
+      }
+    },
+    {
+      "name": "pot0",
+      "label": "Pot 0",
+      "data_type": ["this is the data type and the number of bits used, bits are noted for future use when we stuff packets with more than 1 type of data"],
+      "ide_location": 1,
+      "ide_port": "output",
+      "function_channel": 5,
+      "hardware_type": "ADC",
+      "pin": "A0",
+      "range":  {
+        "note": "should these be in here or should they just be listed in the sub_parameters for this instance",
+        "low": 0,
+        "high": 4096
+      },
+      "tooltip": "Hardware Pot 0",
+      "sub_parameters": ["pot0_noise"],
+      "broadcast": {
+        "on_function": true,
+        "self": true,
+        "announce": false
+      }
+    }
+  ],
+  "software": [
+    {
+      "known_thing_that_does_not_exist_on_the_b3_board": "I know that something like this does not exist on the b3 board but it's a function (or whatever you want to call it) that will have to be expressed and passed in one way or another.  One of the main issues with this is that it's a value that has no ties to hardware, so don't know where to put it",
+      "name": "in_motion",
+      "label": "In Motion",
+      "data_type": ["boolean"],
+      "ide_location": 1,
+      "ide_port": "output",
+      "function_channel": 3,
+      "hardware_type": "soft_input",
+      "invert_boolean": "true",
+      "old": 0,
+      "tooltip": "This is like a simulated button push that happens when the carriage is in motion",
+      "sub_parameter": [null],
+      "broadcast": {
+        "on_function": true,
+        "self": true,
+        "announce": false
+      }
+    },
+    {
+      "known_thing_that_does_not_exist_on_the_b3_board": "I know that a 7 segment display does not exist on the b3 board but it's a function (or whatever you want to call it) that will have to be expressed and passed in one way or another.  One of the main issues with this is that it's a value that has ties to multiple hardware pins, so don't know where to put it",
+      "name": "display1",
+      "label": "Display 1",
+      "data_type": ["long_int", 32],
+      "ide_location": 1,
+      "ide_port": "input",
+      "function_channel": 3,
+      "hardware_type": "specialized_output",
+      "dirty": true,
+      "tooltip": "This is a 7 segment display, I'm going to be honest I think this should be driven by helper functions that can format a 4 byte array and pass it in.  There are too many possibilities to try and stack them in by default",
+      "sub_parameter": [null],
+      "broadcast": {
+        "on_function": true,
+        "self": true,
+        "announce": false
+      }
+    }
+  ],
+  "parameters": [
+    {
+      "name": "button0_debounce",
+      "label": "Button 0 Debounce (ms)",
+      "value": 5,
+      "data_type": ["us_int", 8],
+      "function_channel": 4,
+      "dirty": true,
+      "ide_location": 2,
+      "tooltip": "Debounce for Button 0 in milliseconds",
+    },
+    {
+      "name": "pot0_noise",
+      "label": "Pot 0 Noise Threshold",
+      "value": 5,
+      "data_type": ["us_int", 8],
+      "function_channel": 4,
+      "dirty": true,
+      "ide_location": 2,
+      "tooltip": "Pot Value will have to change more than this amount to trigger a message to the bus"
+    }
+  ]
+}

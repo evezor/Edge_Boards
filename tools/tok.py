@@ -10,6 +10,7 @@ from pprint import pprint
 
 def mk_source(input_, board):
 
+    pprint(board)
     channel = "{type}{priority}".format(**input_)
     function_no = [ d['name'] for d in board['manifest']['inputs'] ].index(input_["input_function_name"])
 
@@ -40,7 +41,9 @@ def doit(args):
 
         model = boards[board_name]['model']
         manifest_name = os.path.join( args.board_dir, model, "manifest.json")
+        print(manifest_name)
         manifest = json.load(open(manifest_name))
+        pprint(manifest)
         boards[board_name]['manifest'] = manifest
 
         mapo['boards'][board_name] = {
@@ -54,8 +57,7 @@ def doit(args):
             mapo[board_name]["heart"] = boards[board_name]["heart"]
 
     # for each board, tokenize and put in mapo
-    for board_name in boards:
-        board = boards[board_name]
+    for board in boards.values():
 
         print("inputs:")
         for input_ in board['inputs']:
@@ -89,7 +91,11 @@ def doit(args):
         for output in board['outputs']:
             print(output)
 
-            source = mk_source(output['source'], board)
+            pprint(boards)
+            inboard = boards[output['source']['board']]
+            # inboard = [b for b in boards if b['manifest']['info']['model'] ==output['source']['board']][0]
+
+            source = mk_source(output['source'], inboard)
             source['board'] = output['source']['board']
 
             function_no = [

@@ -1,167 +1,94 @@
 {
-  "model": "potentiometer",
-  "main": "edge",
-  "driver": "Potentiometer",
-  "init": "init",
-  "parameters": [
-    {
-      "name": "a_button",
-      "type": "button",
-      "pin": "e13",
-      "old": null
-    },
-    {
-      "name": "b_button",
-      "type": "button",
-      "pin": "e12",
-      "old": null
-    },
-    {
-      "name": "function",
-      "type": "button",
-      "pin": "e7",
-      "old": null
-    },
-    {
-      "name": "pot_a",
-      "type": "adc",
-      "pin": "a1",
-      "old": null,
-      "noise": 20
-    },
-    {
-      "name": "pot_b",
-      "type": "adc",
-      "pin": "a0",
-      "old": null,
-      "noise": 20
-    },
-    {
-      "name": "row_0",
-      "type": "led",
-      "pin": "d0",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "row_1",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "row_2",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "row_3",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "row_4",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "row_5",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "row_6",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "row_7",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "hbt_led",
-      "type": "led",
-      "pin": "d5",
-      "value": 0,
-      "dirty": true
-    },
-    {
-      "name": "NEO_STATUS",
-      "type": "neo",
-      "pin": "E6",
-      "value": 0,
-      "dirty": false
-    }
-  ],
+  "info": {
+    "model": "potentiometer",
+    "main": "edge",
+    "driver": "Potentiometer",
+    "init": "init"
+  },
   "inputs": [
-    {
-      "name": "a_button"
+    { "name": "button_a" },
+    { "name": "button_b" },
+    { "name": "pot_a",
+      "range": {
+        "low": 0,
+        "high": 4095
+      }
+    },
+    { "name": "pot_b",
+      "range": {
+        "low": 0,
+        "high": 4095
+        }
+    }
+  ],
+
+  "outputs": [
+      { "name": "meter_a" ,
+       "range": {
+        "low": 0,
+        "high": 7
+        }
+      },
+      { "name": "meter_b" ,
+       "range": {
+        "low": 0,
+        "high": 7
+        }
+      }
+  ],
+
+  "parameters": [{
+      "name": "button_a",
+      "type": "boolean",
+      "pin": "E13",
+      "old": 0
     },
     {
-      "name": "b_button"
-    },
-    {
-      "name": "function"
+      "name": "button_b",
+      "type": "boolean",
+      "pin": "E12",
+      "old": 0
     },
     {
       "name": "pot_a",
+      "type": "int",
+      "type": "adc",
+      "pin": "A1",
+      "old": null,
       "range": {
         "low": 0,
         "high": 4096
-      }
+      },
+      "noise": 20
     },
-    {
+     {
       "name": "pot_b",
+      "type": "int",
+      "type": "adc",
+      "pin": "A0",
+      "old": null,
       "range": {
         "low": 0,
         "high": 4096
-      }
+      },
+      "noise": 20
+    },
+   {
+      "name": "meter_a",
+      "type": "int",
+      "value": 0,
+      "pin": "",
+      "dirty": true,
+      "tooltip": "Andrew will write something here"
+    },
+    {
+      "name": "meter_b",
+      "type": "int",
+      "value": 0,
+      "pin": "",
+      "dirty": true,
+      "tooltip": "Andrew will write something here"
     }
-  ],
-  "outputs": [
-    {
-      "name": "row_0"
-    },
-    {
-      "name": "row_1"
-    },
-    {
-      "name": "row_2"
-    },
-    {
-      "name": "row_3"
-    },
-    {
-      "name": "row_4"
-    },
-    {
-      "name": "row_5"
-    },
-    {
-      "name": "row_6"
-    },
-    {
-      "name": "row_7"
-    },
-    {
-      "name": "hbt_led"
-    },
-    {
-      "name": "NEO_STATUS"
-    }
+
   ]
 }

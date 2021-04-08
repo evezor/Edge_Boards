@@ -290,6 +290,10 @@ class Edge(Board):
                 self.check_inputs()
                 self.driver.save_states()
 
+            # keep long runing jobs running
+            self.driver.refresh()
+
+
 
 def drink(ocan):
     # not maintained doubt this works any more.

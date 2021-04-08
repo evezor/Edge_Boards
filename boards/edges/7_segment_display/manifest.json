@@ -1,0 +1,45 @@
+{
+  "info": {
+    "model": "7 segment display",
+    "main": "edge",
+    "driver": "Seven",
+    "init": "init"
+  },
+  "inputs": [
+  ],
+
+  "outputs": [
+      { "name": "digits_0" ,
+       "range": {
+        "low": 0,
+        "high": 9999
+        }
+      },
+      { "name": "digits_1" ,
+       "range": {
+        "low": 0,
+        "high": 9999
+        }
+      }
+  ],
+
+  "parameters": [
+   {
+      "name": "digits_0",
+      "type": "int",
+      "value": 0,
+      "pin": "",
+      "dirty": true,
+      "tooltip": "Andrew will write something here"
+    },
+    {
+      "name": "digits_1",
+      "type": "int",
+      "value": 0,
+      "pin": "",
+      "dirty": true,
+      "tooltip": "Andrew will write something here"
+    }
+
+  ]
+}

@@ -55,8 +55,7 @@ class Driver:
     def read_states(self):
         # read values from hardware, save to parameter table
 
-        for key in self.parameters:
-            parameter = self.parameters[key]
+        for parameter in self.parameters.values():
 
             """
             "name": "JOY_SW",
@@ -156,6 +155,11 @@ class Driver:
 
     def led_dim(self, name, value):
         self.pins[name].pulse_width_percent(value)
+
+    # refresh
+    # long running jobs that need more than just setting a pin.
+    def refresh(self):
+        return None
 
     # stops:
 

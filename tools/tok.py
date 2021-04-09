@@ -57,22 +57,13 @@ def doit(args):
             mapo[board_name]["heart"] = boards[board_name]["heart"]
 
     # for each board, tokenize and put in mapo
-    for board in boards.values():
+    for board_name,board in boards.items():
 
         print("inputs:")
         for input_ in board['inputs']:
             print(input_)
 
             source = mk_source(input_, board)
-            """
-            channel = "{type}{priority}".format(**input_)
-            function_no = [ d['name'] for d in board['manifest']['inputs'] ].index(inputs_["input_function_name"])
-
-            source = {
-                    "channel": channel,
-                    "function_no": function_no,
-                    }
-            """
 
             # messy?
             # not tested either
@@ -123,10 +114,12 @@ def doit(args):
 
 def get_args():
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        )
 
     parser.add_argument("--name", default="ls2oh",
-            help="dir in systems")
+            help="dir in systems that contains map.json")
 
     parser.add_argument("--system_dir", default="systems",
             help="dir of systems")

@@ -23,13 +23,13 @@
   ],
 
   "outputs": [
-      { "name": "meter_a" ,
+      { "name": "graph_a" ,
        "range": {
         "low": 0,
         "high": 7
         }
       },
-      { "name": "meter_b" ,
+      { "name": "graph_b" ,
        "range": {
         "low": 0,
         "high": 7
@@ -74,18 +74,18 @@
       "noise": 20
     },
    {
-      "name": "meter_a",
-      "type": "meter",
+      "name": "graph_a",
+      "type": "graph",
       "value": 0,
-      "pin": "",
+      "pin": "E4",
       "dirty": true,
       "tooltip": "Andrew will write something here"
     },
     {
-      "name": "meter_b",
-      "type": "meter",
+      "name": "graph_b",
+      "type": "graph",
       "value": 0,
-      "pin": "",
+      "pin": "E3",
       "dirty": true,
       "tooltip": "Andrew will write something here"
     }

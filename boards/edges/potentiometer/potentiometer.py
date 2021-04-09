@@ -1,17 +1,36 @@
 from driver import Driver
+from pyb import Pin
 
 class Potentiometer(Driver):
 
+    graph = [ "D0", "D1", "E2", "E1", "A5", "A4", "A3", "A2", ]
+
+    graph_parameters = [ 'graph_a', 'graph_b']
+    graph_current = 0
+    x = 0
+
+    def setup_pins(self):
+
+        for parameter in self.parameters.values():
+
+            if parameter['type'] == "graph":
+                 self.pins[parameter['pin']] = \
+                 Pin(parameter['pin'], Pin.OUT, Pin.PULL_DOWN)
+
+        for pin_label in self.graph:
+             self.pins[pin_label] = \
+             Pin(pin_label, Pin.OUT)
+
+        super().setup_pins()
+
+
     # buttons:
 
-    def a_button(self):
-        return self.button_ck( 'a_button' )
+    def button_a(self):
+        return self.button_ck( 'button_a' )
 
-    def b_button(self):
-        return self.button_ck( 'b_button' )
-
-    def function(self):
-        return self.button_ck( 'function' )
+    def button_b(self):
+        return self.button_ck( 'button_b' )
 
     # adcs:
 
@@ -21,39 +40,38 @@ class Potentiometer(Driver):
     def pot_b(self):
         return self.adc( 'pot_b' )
 
-    # leds:
+    # led graphs:
 
-    def row_0(self,value):
-        return self.led_set( 'row_0', value )
+    def graph_a(self,value):
+        self.parameters['graph_a']['value'] = int(value)
 
-    def row_1(self,value):
-        return self.led_set( 'row_1', value )
+    def graph_b(self,value):
+        self.parameters['graph_b']['value'] = int(value)
 
-    def row_2(self,value):
-        return self.led_set( 'row_2', value )
 
-    def row_3(self,value):
-        return self.led_set( 'row_3', value )
+    # refreshs
 
-    def row_4(self,value):
-        return self.led_set( 'row_4', value )
+    def refresh(self):
 
-    def row_5(self,value):
-        return self.led_set( 'row_5', value )
+        if not self.x:
 
-    def row_6(self,value):
-        return self.led_set( 'row_6', value )
+            # turn off current graph
 
-    def row_7(self,value):
-        return self.led_set( 'row_7', value )
+            parameter = self.parameters[self.graph_parameters[self.graph_current]]
+            self.pins[parameter['pin']].value(1)
 
-    def hbt_led(self,value):
-        return self.led_set( 'hbt_led', value )
+            # setup next graph
+            self.graph_current = ( self.graph_current +1 ) % 2
+            parameter = self.parameters[self.graph_parameters[self.graph_current]]
 
-    # pwms:
+            for pin_label in self.graph[:parameter['value']]:
+                 self.pins[pin_label].value(1)
 
-    # neos:
+            for pin_label in self.graph[parameter['value']:]:
+                 self.pins[pin_label].value(0)
 
-    def NEO_STATUS(self, value):
-        return self.neo_play( 'NEO_STATUS', value )
+            # light it up
+            self.pins[parameter['pin']].value(0)
+
+        self.x = ( self.x+1) % 80
 

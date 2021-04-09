@@ -26,7 +26,7 @@
   "parameters": [
    {
       "name": "digits_0",
-      "type": "int",
+      "type": "7seg",
       "value": 0,
       "pin": "",
       "dirty": true,
@@ -34,7 +34,7 @@
     },
     {
       "name": "digits_1",
-      "type": "int",
+      "type": "7seg",
       "value": 0,
       "pin": "",
       "dirty": true,

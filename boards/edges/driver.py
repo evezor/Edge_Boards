@@ -15,29 +15,32 @@ class Driver:
 
     def setup_pins(self):
 
+        self.pins["D13"] = Pin("D13", Pin.OUT) # HBT_LED
+        self.pins["D5"] = Pin("D5", Pin.IN, Pin.PULL_UP) # FUNC_BUTTON
+
         for parameter in self.parameters.values():
 
-            if parameter['type'] == "boolean":
-                self.pins[parameter['name']] = \
+            if parameter['type'] == "in":
+                self.pins[parameter['pin']] = \
                     Pin(parameter['pin'], Pin.IN, Pin.PULL_UP)
 
             elif parameter['type'] == "adc":
-                self.pins[parameter['name']] = \
+                self.pins[parameter['pin']] = \
                     pyb.ADC(parameter['pin'])
 
-            elif parameter['type'] == "int":
+            elif parameter['type'] == "out":
                 pin = Pin(parameter['pin'], Pin.OUT)
-                self.pins[parameter['name']] = pin
+                self.pins[parameter['pin']] = pin
 
             elif parameter['type'] == "pwm":
                 pin = Pin(parameter['pin'], Pin.OUT)
                 tim = Timer(3, freq=1000)
-                self.pins[parameter['name']] = \
+                self.pins[parameter['pin']] = \
                         tim.channel(2, Timer.PWM, pin=pin )
 
             elif parameter['type'] == "neo":
                 pin = Pin(parameter['pin'], Pin.OUT)
-                self.pins[parameter['name']] = pin
+                self.pins[parameter['pin']] = pin
 
 
     def init(self):
@@ -45,6 +48,7 @@ class Driver:
         self.read_states()
         self.set_states()
         self.wake_up_can()
+        self.heart_set(1)
 
 
     # Inputs
@@ -57,20 +61,14 @@ class Driver:
 
         for parameter in self.parameters.values():
 
-            """
-            "name": "JOY_SW",
-            "type": "button",
-            "pin": "E0",
-            """
-
-            if parameter['type'] == "boolean":
+            if parameter['type'] == "in":
                 parameter['new'] = \
-                    self.pins[parameter['name']].value()
+                    self.pins[parameter['pin']].value()
                 # print( parameter['new'] )
 
             elif parameter['type'] == "adc":
                 parameter['new'] = \
-                    self.pins[parameter['name']].read()
+                    self.pins[parameter['pin']].read()
 
         return None
 
@@ -113,11 +111,9 @@ class Driver:
     # wrap up read,act,save:
     def save_states(self):
 
-        for key in self.parameters:
-            parameter = self.parameters[key]
+        for parameter in self.parameters.values():
 
-            if parameter['type'] in [ "boolean", "adc", "code"]:
-                parameter = self.parameters[key]
+            if parameter['type'] in [ "in", "adc", "code" ]:
                 parameter['old'] = parameter['new']
 
     # outputs
@@ -131,7 +127,7 @@ class Driver:
 
             if parameter.get('dirty'):
 
-                if parameter['type'] == "int":
+                if parameter['type'] == "out":
                     self.pins[parameter['name']].value(parameter['value'])
 
                 elif parameter['type'] == "pwm":
@@ -143,18 +139,19 @@ class Driver:
                 parameter['dirty'] = False
 
 
-    def led_set(self, name, value):
+    def led_set(self, pin_label, value):
         # print( "#3",  name, self.pins[name], value )
-        self.pins[name].value(value)
+        self.pins[pin_label].value(value)
 
 
-    def led_toggle(self, name):
+    def led_toggle(self, pin_label):
         # flip value between 0 and 1
+        wtf()
         value = 0 if self.parameters[name] else 1
-        self.led_set( name, value)
+        self.led_set( pin_label, value)
 
-    def led_dim(self, name, value):
-        self.pins[name].pulse_width_percent(value)
+    def led_dim(self, pin_label, value):
+        self.pins[pin_label].pulse_width_percent(value)
 
     # refresh
     # long running jobs that need more than just setting a pin.
@@ -199,4 +196,8 @@ class Driver:
         can_chip_pin = Pin("D6", Pin.OUT)
         can_chip_pin.value(0)
 
+    def heart_set(self, value):
+        return self.led_set("D13", value)
 
+    def ck_func(self):
+       return self.pins['D5'].value()

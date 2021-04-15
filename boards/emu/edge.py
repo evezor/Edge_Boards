@@ -170,6 +170,7 @@ class Edge(Board):
 
             elif beer.header=='RESUME':
                 self.pause = False
+                self.driver.heart_set(0)
 
 
         if beer is None:

@@ -9,18 +9,8 @@
   ],
 
   "outputs": [
-      { "name": "digits_0" ,
-       "range": {
-        "low": 0,
-        "high": 9999
-        }
-      },
-      { "name": "digits_1" ,
-       "range": {
-        "low": 0,
-        "high": 9999
-        }
-      }
+      { "name": "digits_0" },
+      { "name": "digits_1" }
   ],
 
   "parameters": [

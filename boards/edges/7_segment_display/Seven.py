@@ -15,6 +15,7 @@ class Seven(Driver):
 '8': [1,1,1,1,1,1,1,0],
 '9': [1,1,1,1,0,1,1,0],
 ' ': [0,0,0,0,0,0,0,0],
+'-': [0,0,0,0,0,0,1,0],
 }
     x=0
 
@@ -33,6 +34,9 @@ class Seven(Driver):
                 self.pins[pin_label] = Pin(pin_label, Pin.OUT)
             for pin_label in parameter['SEGMENTS']:
                 self.pins[pin_label] = Pin(pin_label, Pin.OUT)
+
+        super().setup_pins()
+
 
     # outputs
 
@@ -66,5 +70,5 @@ class Seven(Driver):
             for parameter in self.parameters.values():
                 self.one_p(parameter)
 
-        self.x = ( self.x+1) % 40
+        self.x = ( self.x+1) % 20 # (int(self.parameters['digits_1']['value']/00)+1)
 

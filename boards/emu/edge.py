@@ -54,7 +54,7 @@ class Edge(Board):
             print("restore state failed:", e)
 
         # hello zorg, I am here
-        self.ocan.send("NWK", BOARD_NO_ID, "BOARD_IAM", b'iam bord')
+        self.ocan.send("NWK", BOARD_NO_ID, "BOARD_IAM", b'ima bord')
 
         if self.can_id is None:
 
@@ -70,6 +70,8 @@ class Edge(Board):
                     beer=None
 
             # Zorg awake, tell zorg mac:
+            bigmac = ':'.join( "{:02x}".format(i) for i in mac )
+            print(bigmac, self.manifest['info']['model'], bigmac )
             self.ocan.send("NWK", BOARD_NO_ID, "BOARD_DISCOVER", mac )
 
             # wait for Zorg to assign a can_id
@@ -113,16 +115,18 @@ class Edge(Board):
             elif beer.header=='SET_INPUT':
                 l = list(beer.message)
                 channel, function_no = l[:2]
+                print("channel: {}  function_no: {}".format(channel, function_no))
                 function_name = self.manifest['inputs'][function_no]['name']
                 input_ = {
                     'channel': channels[channel],
                     'function_name': function_name,
                     }
-                if "range" in self.manifest['inputs'][function_no]:
-                    l2 = struct.unpack( "BBHH", beer.message)
-                    assert channel == l2[0]
-                    assert function_no == l2[1]
-                    input_["range"] = { 'low': l2[2], 'high': l2[3] }
+
+                # if "range" in self.manifest['inputs'][function_no]:
+                #    l2 = struct.unpack( "BBHH", beer.message)
+                #    assert channel == l2[0]
+                #    assert function_no == l2[1]
+                #    input_["range"] = { 'low': l2[2], 'high': l2[3] }
 
                 self.inputs.append(input_)
 
@@ -144,9 +148,9 @@ class Edge(Board):
                     'function_name': function_name,
                     }
 
-                if "range" in self.manifest['outputs'][dst_function_no]:
-                    l2 = struct.unpack( "BBBBHH", beer.message)
-                    output["range"] = { 'low': l2[4], 'high': l2[5] }
+                # if "range" in self.manifest['outputs'][dst_function_no]:
+                #    l2 = struct.unpack( "BBBBHH", beer.message)
+                #    output["range"] = { 'low': l2[4], 'high': l2[5] }
 
                 self.outputs.append(output)
 
@@ -198,7 +202,12 @@ class Edge(Board):
                 # see if this message should trigger any outputs
                 # TODO: optimize this loop into a dict lookup
                 # note: the same input can trigger many outputs.
+                print("#1: {}\n".format(self.outputs))
+
                 for output in self.outputs:
+                    print(output)
+                    print(beer)
+                    print()
                     if  output['channel'] == beer.channel \
                             and output['source']['function_no'] == beer.header \
                             and output['source']['can_id'] == beer.can_id:
@@ -207,7 +216,9 @@ class Edge(Board):
                         function = getattr(self.driver, function_name)
                         # print("#1 output:", output)
                         print("#3 function_name:", function_name)
+
                         if 'range' in output:
+                            assert False, "no range support right now"
 
                             val, low_input, high_input = struct.unpack(
                                     "HHH", beer.message)
@@ -222,11 +233,15 @@ class Edge(Board):
 
                             y = (high_output - low_output) / (high_input - low_input) *  (val - low_input) + low_output
 
-                            print(y)
-
                             ret = function(y)
                         else:
-                            val = int.from_bytes(beer.message, 'big')
+                            print( beer.message )
+                            if len( beer.message ) == 1:
+                                print( "len( beer.message ) == 1:" )
+                                val = struct.unpack("B", beer.message)[0]
+                            else:
+                                print( "else not len( beer.message ) == 1:" )
+                                val = struct.unpack("H", beer.message)[0]
                             ret = function(val)
 
 
@@ -261,11 +276,13 @@ class Edge(Board):
                             function_name)
 
                 if 'range' in input_:
+                    assert False, "no range here either"
                     low = input_['range']['low']
                     high = input_['range']['high']
                     message =  struct.pack("HHH", ret, low, high)
                 else:
-                    message = ret
+                    message =  struct.pack("H", ret)
+                    # message = ret
 
                 beer = self.ocan.send(
                         channel, self.can_id, header=function_no, message=message)

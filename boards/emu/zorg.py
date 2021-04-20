@@ -149,12 +149,13 @@ class Zorg(Board):
                     channels.index(input_['channel']),
                     input_['function_no']
                     ]
-                if "range" in input_:
-                    f += "HH"
-                    l.extend( (input_['range']['low'], input_['range']['high']) )
+                # if "range" in input_:
+                #    f += "HH"
+                #    l.extend( (input_['range']['low'], input_['range']['high']) )
 
                 message = struct.pack(f,*l)
                 self.ocan.send("NWK", can_id, "SET_INPUT", message)
+                time.sleep_ms(10)
 
             for output in mad_map['outputs']:
                 print(output)
@@ -165,9 +166,9 @@ class Zorg(Board):
                     src_board_chan_id,
                     output['function_no']
                     ]
-                if "range" in output:
-                    f += "HH"
-                    l.extend((output['range']['low'], output['range']['high']))
+                # if "range" in output:
+                #    f += "HH"
+                #    l.extend((output['range']['low'], output['range']['high']))
                 message = struct.pack(f,*l)
                 self.ocan.send("NWK", can_id, "SET_OUTPUT", message)
 
@@ -180,6 +181,7 @@ class Zorg(Board):
                 self.ocan.send("NWK", can_id, "SET_PARMA", message)
 
             self.ocan.send("NWK", can_id, "RESUME")
+            time.sleep_ms(10)
             self.ocan.send("NWK", can_id, "SAVE_ME")
 
         def maps_send_all():

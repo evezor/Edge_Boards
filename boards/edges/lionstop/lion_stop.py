@@ -12,7 +12,7 @@ class Lion_Stop(Driver):
         return self.button_ck( 'limit_switch_0' )
 
     def limit_switch_1(self):
-        return None  # self.button_ck( 'limit_switch_1' )
+        return self.button_ck( 'limit_switch_1' )
 
     # param?
 
@@ -75,10 +75,6 @@ class Lion_Stop(Driver):
     def step(self, direction, soft_stop=True):
         # returns True if moved
 
-        self.enable()
-
-        self.set_direction(direction)
-
         # check for stops
 
         if direction == 0:
@@ -128,6 +124,10 @@ class Lion_Stop(Driver):
                     self.parameters['move_delay']['value'])
 
             if utime.ticks_diff(deadline, utime.ticks_ms()) <= 0:
+
+                self.enable()
+
+                self.set_direction(direction)
 
                 self.pins[self.parameters['step']['pin']].value(1)
                 self.pins[self.parameters['step']['pin']].value(0)

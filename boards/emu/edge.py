@@ -162,6 +162,7 @@ class Edge(Board):
 
             elif beer.header=='SAVE_ME':
                 if self.map_version is None:
+                    print("self.map_version is None")
                     raise
                 sotwca = {
                         'map_version': self.map_version,
@@ -192,6 +193,7 @@ class Edge(Board):
             if beer.can_id == self.can_id:
 
                 if beer.channel == "NWK":
+                    print(beer)
                     nwk(beer)
 
             if self.pause:
@@ -202,12 +204,12 @@ class Edge(Board):
                 # see if this message should trigger any outputs
                 # TODO: optimize this loop into a dict lookup
                 # note: the same input can trigger many outputs.
-                print("#1: {}\n".format(self.outputs))
+                # print("#1: {}\n".format(self.outputs))
 
                 for output in self.outputs:
-                    print(output)
-                    print(beer)
-                    print()
+                    # print(output)
+                    # print(beer)
+                    # print()
                     if  output['channel'] == beer.channel \
                             and output['source']['function_no'] == beer.header \
                             and output['source']['can_id'] == beer.can_id:
@@ -215,7 +217,7 @@ class Edge(Board):
                         function_name = output['function_name']
                         function = getattr(self.driver, function_name)
                         # print("#1 output:", output)
-                        print("#3 function_name:", function_name)
+                        # print("#3 function_name:", function_name)
 
                         if 'range' in output:
                             assert False, "no range support right now"
@@ -235,12 +237,12 @@ class Edge(Board):
 
                             ret = function(y)
                         else:
-                            print( beer.message )
+                            # print( beer.message )
                             if len( beer.message ) == 1:
                                 print( "len( beer.message ) == 1:" )
                                 val = struct.unpack("B", beer.message)[0]
                             else:
-                                print( "else not len( beer.message ) == 1:" )
+                                # print( "else not len( beer.message ) == 1:" )
                                 val = struct.unpack("H", beer.message)[0]
                             ret = function(val)
 

@@ -86,20 +86,20 @@ class OCan():
 
         # TODO: try: .send() except: if no buffers sleep and loop.
 
-        time.sleep_ms(1)
+        time.sleep_us(800)
         pending_tx = True
         while pending_tx:
 
             tec, rec, e_warns, e_passives, e_offs, pending_tx, pending_rx0, pending_rx1 = self.can.info()
 
             # number of pending TX messages
-            time.sleep_ms(pending_tx)
+            time.sleep_us(pending_tx * 300)
 
         self.can.send(message, msg_id)
 
     def send(self, channel_name, can_id, header=0, message=b''):
 
-        print("tx: ",channel_name, can_id, header, message)
+        print("tx: ",channel_name, can_id, header)
         channel_num = channels.index(channel_name)
 
         ci = CanMessageId()

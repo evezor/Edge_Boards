@@ -12,7 +12,7 @@ class Lion_Stop(Driver):
         return self.button_ck( 'limit_switch_0' )
 
     def limit_switch_1(self):
-        return 1  # self.button_ck( 'limit_switch_1' )
+        return None  # self.button_ck( 'limit_switch_1' )
 
     # param?
 

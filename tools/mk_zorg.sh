@@ -18,3 +18,5 @@ cp -u main.py bundle.py ocan.py board.py zorg.py $dst
 )
 
 cp systems/mapo.json $dst
+
+echo "import machine; machine.soft_reset()"

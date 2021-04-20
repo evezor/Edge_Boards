@@ -27,3 +27,5 @@ cp -u $board/* $dst
 )
 )
 
+echo "import machine; machine.soft_reset()"
+

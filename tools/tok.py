@@ -12,11 +12,13 @@ def mk_source(input_, board):
 
     pprint(board)
     channel = "{type}{priority}".format(**input_)
-    function_no = [ d['name'] for d in board['manifest']['inputs'] ].index(input_["input_function_name"])
+    input_function_name = input_["input_function_name"]
+    function_no = [ d['name'] for d in board['manifest']['inputs'] ].index(input_function_name)
 
     source = {
             "channel": channel,
             "function_no": function_no,
+            "function_name": input_function_name,
             }
 
     return source
@@ -89,12 +91,13 @@ def doit(args):
             source = mk_source(output['source'], inboard)
             source['board'] = output['source']['board']
 
+            output_function_name = output['output_function_name']
             function_no = [
-                    d['name'] for d in board['manifest']['outputs'] ].index(
-                            output['output_function_name'])
+                    d['name'] for d in board['manifest']['outputs'] ].index( output_function_name)
             o = {
                 'source': source,
                 "function_no": function_no,
+                "function_name": output_function_name,
                 }
 
             # messy?

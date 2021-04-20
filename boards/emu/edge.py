@@ -240,6 +240,7 @@ class Edge(Board):
                             # print( beer.message )
                             if len( beer.message ) == 1:
                                 print( "len( beer.message ) == 1:" )
+                                raise
                                 val = struct.unpack("B", beer.message)[0]
                             else:
                                 # print( "else not len( beer.message ) == 1:" )
@@ -253,6 +254,7 @@ class Edge(Board):
                 parma_name = self.parameters[parma_no]
                 value = self.driver.parameters[parma_name]['new']
                 # maybe this, maybe not:
+                # print(parma_name)
                 self.ocan.send( beer.channel, self.can_id, header=_parma_nono, message=value)
 
 
@@ -285,6 +287,8 @@ class Edge(Board):
                 else:
                     message =  struct.pack("H", ret)
                     # message = ret
+
+                # print(function_name)
 
                 beer = self.ocan.send(
                         channel, self.can_id, header=function_no, message=message)

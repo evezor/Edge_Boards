@@ -74,6 +74,12 @@
       "value": 0,
       "dirty": true
     },
+    {
+      "name": "position_set",
+      "type": "steps",
+      "value": 0,
+      "dirty": true
+    },
 
     { "name": "move_delay",
       "type": "ms",
@@ -91,7 +97,7 @@
     {
       "name": "max_position",
       "type": "steps",
-      "value": 5357
+      "value": 5957
     }
   ]
 }

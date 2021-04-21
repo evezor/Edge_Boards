@@ -39,6 +39,9 @@ class Lion_Stop(Driver):
         else:
             self.parameters['left']['value'] = 1
 
+    def position_set(self, value):
+            self.parameters['position_set']['value'] = value
+
 
     # refreshs
 
@@ -152,6 +155,17 @@ class Lion_Stop(Driver):
 
     def move_left(self):
         ret = self.step(1)
+        return ret
+
+    def move_to_position(self):
+        delta = self.parameters['position']['value'] - self.parameters['position_set']['value']
+        direction = 0 if delta > 0 else 1
+
+        print( self.parameters['position']['value'], self.parameters['position_set']['value'], delta, direction )
+
+        ret = self.step(direction)
+
+        return ret
 
 
     def ck_timeout(self):
@@ -177,7 +191,6 @@ class Lion_Stop(Driver):
         return ret
 
 
-
     def refresh(self):
 
         if self.parameters['home']['value']:
@@ -185,6 +198,9 @@ class Lion_Stop(Driver):
 
         if self.parameters['left']['value']:
             self.move_left()
+
+        if self.parameters['position_set']['value'] != self.parameters['position']['value']:
+            self.move_to_position()
 
         self.ck_timeout()
 
